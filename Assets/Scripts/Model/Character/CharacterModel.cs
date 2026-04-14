@@ -1,25 +1,28 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class CharacterModel
 {
     private const float YWORDPOSITION = 1.15f;
-    public int currentPosition { get; private set; }
+    public int currentCharacterCell { get; set; }
+    public ActorOnFloorRepository _actorOnFloorRepository { get; private set; }
+    public GridFloorRepository _gridFloorRepository { get; private set; }
 
-    public CharacterModel(int currentPosition)
+    public CharacterModel()
     {
-        this.currentPosition = currentPosition;
+        _actorOnFloorRepository = ActorOnFloorRepository.Instance;
+        _gridFloorRepository = GridFloorRepository.Instance;
     }
 
     public Vector2? GetTargetPosition(int targetCellIndex)
     {
-        var repo = GridFloorRepository.Instance;
 
-        if (!repo.Exists(targetCellIndex))
+        if (!_gridFloorRepository.Exists(targetCellIndex))
         {
             Debug.LogWarning($"Cell index {targetCellIndex} does not exist in Repository.");
             return null;
         }
 
-        return new Vector2(repo.Get(targetCellIndex), YWORDPOSITION);
+        return new Vector2(_gridFloorRepository.Get(targetCellIndex).transform.localPosition.x, YWORDPOSITION);
     }
 }

@@ -1,22 +1,28 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class GridFloorRepository : Singleton<GridFloorRepository>, IRepository<int, float>
+public class GridFloorRepository : Singleton<GridFloorRepository>, IRepository<int, GameObject>
 {
-    private readonly Dictionary<int, float> _data = new Dictionary<int, float>();
+    private readonly Dictionary<int, GameObject> _data = new Dictionary<int, GameObject>();
     
-    public void Add(int id, float xPos)
+    public void Add(int cell, GameObject obj)
     {
-        _data[id] = xPos;
+        _data[cell] = obj;
     }
 
-    public float Get(int id)
+    public GameObject Get(int cell)
     {
-        return _data.TryGetValue(id, out var xPos) ? xPos : 0f;
+        return _data.TryGetValue(cell, out var obj) ? obj : null;
     }
 
-    public bool Exists(int id)
+    public int GetTotalCells()
     {
-       return _data.ContainsKey(id);
+        return _data.Count;
+    }
+
+    public bool Exists(int cell)
+    {
+       return _data.ContainsKey(cell);
     }
 
     public void Clear()

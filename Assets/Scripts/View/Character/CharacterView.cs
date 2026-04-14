@@ -10,7 +10,7 @@ public class CharacterView : MonoBehaviour
         _transform = transform;
     }
 
-    public void Moving(Vector2? targetPos)
+    public void ChangePosition(Vector2? targetPos)
     {
         if (targetPos == null) 
             return;

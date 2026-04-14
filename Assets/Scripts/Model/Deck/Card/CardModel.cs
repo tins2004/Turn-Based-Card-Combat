@@ -1,16 +1,12 @@
-using UnityEngine;
-
-public class CardModel : MonoBehaviour
+public class CardModel
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public CardSO cardData { get; private set; }
+    public ActorOnFloorRepository _actorOnFloorRepository { get; private set; }
 
-    // Update is called once per frame
-    void Update()
+    public CardModel(CardSO cardData)
     {
+        this.cardData = cardData;
         
+        _actorOnFloorRepository = ActorOnFloorRepository.Instance;
     }
 }

@@ -1,16 +1,18 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CardView : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void UpdateCardVisual(bool isSelected) 
     {
-        
-    }
+        var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (spriteRenderer != null) 
+        {
+            Color color = spriteRenderer.color;
+            color.a = isSelected ? 1f : 0.2f;
+            spriteRenderer.color = color;
+        }
     }
 }
