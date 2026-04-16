@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a6c3bad7dbe5942b1e3e041b6963f8, type: 3}
+  m_Name: WARRIOR
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySO
+  EnemyId: WARRIOR
+  Name: "Hi\u1EC7p s\u0129"
+  Type: Warrior
+  EnemySkill:
+  - {fileID: 11400000, guid: d90d414fc183f7944a61664d7a66be58, type: 2}
+  - {fileID: 11400000, guid: 2fc44bf190476894a8b9d23310153b7e, type: 2}

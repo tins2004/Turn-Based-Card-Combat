@@ -20,6 +20,7 @@ public class CharacterPresenter : MonoBehaviour
     {
         _model = new CharacterModel();
 
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
         MoveToCell(spawnPos);
 
         SetupObserverListener();
@@ -31,25 +32,36 @@ public class CharacterPresenter : MonoBehaviour
 
         if (_model._actorOnFloorRepository.Exists(_model.currentCharacterCell))
         {
-            _model._actorOnFloorRepository.Add(_model.currentCharacterCell, 0);
+            if (_model._actorOnFloorRepository.Get(_model.currentCharacterCell) == 1)
+            {
+                _model._actorOnFloorRepository.Add(_model.currentCharacterCell, 0);
+            }
         }
 
         _model.currentCharacterCell = cell;
         _model._actorOnFloorRepository.Add(cell, 1);
     }
 
-    private void HandleCelectedCell(object data)
+    private void HandleSelectedCell(object data)
     {
         MoveToCell((int)data);
     }
 
+    private void HandleTakeDamage(object data)
+    {
+        _model.TakeDamage((int)data);
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+    }
+
     private void SetupObserverListener()
     {
-        Observer.AddListener(ObserverEvents.SELECTED_CELL, HandleCelectedCell);
+        Observer.AddListener(ObserverEvents.SELECTED_CELL, HandleSelectedCell);
+        Observer.AddListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
     }
 
     private void OnDestroy()
     {
-        Observer.RemoveListener(ObserverEvents.SELECTED_CELL, HandleCelectedCell);
+        Observer.RemoveListener(ObserverEvents.SELECTED_CELL, HandleSelectedCell);
+        Observer.RemoveListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
     }
 }

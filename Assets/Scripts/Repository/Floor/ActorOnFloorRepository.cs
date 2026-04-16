@@ -46,6 +46,11 @@ public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IReposi
     /// </summary>
     public bool Exists(int cell)
     {
+        // foreach (var (i, val) in _data)
+        // {
+        //     Debug.Log($"Vị trí Cell: {i} có: {val}");
+        // }
+
         if (_data.ContainsKey(cell))
         {   
             return _data[cell] != 0;

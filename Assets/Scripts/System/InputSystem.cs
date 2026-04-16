@@ -27,7 +27,7 @@ public class InputSystem : SingletonMonoBehaviour<InputSystem>
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             _isDragging = true;
-            OnPointerDown?.Invoke(worldPos);
+            OnPointerDown?.Invoke(mousePos);
         }
 
         if (_isDragging)
@@ -39,6 +39,12 @@ public class InputSystem : SingletonMonoBehaviour<InputSystem>
         {
             _isDragging = false;
             OnPointerUp?.Invoke(worldPos);
+        }
+
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            // Observer.Notify(ObserverEvents.CHARACTER_TAKE_DAMAGE, 10);
+            Observer.Notify(ObserverEvents.ENEMY_TAKE_DAMAGE, 10);
         }
     }
 

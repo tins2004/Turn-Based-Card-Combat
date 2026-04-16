@@ -1,15 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CardPresenter : MonoBehaviour
+public class CardPresenter : MonoBehaviour
 {
-    [SerializeField] private CardSO cardData;
-    public int rangeCardImpact { get; protected set; }
+    private CardView _view;
+    private CardModel _model;
+    private SkillStrategy _skillStrategy;
 
-    protected CardView _view { get; private set; }
-    protected CardModel _model { get; private set; }
-
-    protected virtual void Awake()
+    private void Awake()
     {
         if (_view == null)
         {
@@ -17,9 +15,15 @@ public abstract class CardPresenter : MonoBehaviour
         }
     }
 
-    protected virtual void Start()
+    public void SetUpCard(CardSO cardData)
     {
         _model = new CardModel(cardData);
+        _skillStrategy = cardData.Detail.SkillAlgorithm;
+        Debug.Log("Set up: " + _skillStrategy);
+        _skillStrategy.ConfigDataSKill(cardData.Detail);
+
+        _view.UpdateCardVisual(false);
+        _view.DisplayInformationCard(_model.cardData);
     }
 
     public void SelectedCard(bool isSelected)
@@ -27,15 +31,26 @@ public abstract class CardPresenter : MonoBehaviour
         _view.UpdateCardVisual(isSelected);
     }
 
+    public CardSO GetCardData()
+    {
+        return _model.cardData;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Array Cells follow range of card</returns>
+    public List<int> GetRealCellsImpact() => _skillStrategy.GetRealCellsImpact();
+
     /// <summary>
     /// 
     /// </summary>
     /// <returns>Array Cells allow the Card may have an impact</returns>
-    public abstract List<int> GetCellsCanImpact();
+    public List<int> GetCellsCanImpact(int realCellImpact) => _skillStrategy.GetCellsCanImpact(realCellImpact);
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns>Array Cells actor or subject need to pass through</returns>
-    public abstract List<int> GetCellsOnLineImpact(int cellTarget);
+    public List<int> GetCellsOnLineImpact(int cellTarget) => _skillStrategy.GetCellsOnLineImpact(cellTarget);
 }

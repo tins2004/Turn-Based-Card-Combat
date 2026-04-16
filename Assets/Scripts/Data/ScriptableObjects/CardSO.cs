@@ -2,7 +2,8 @@ using UnityEngine;
 
 [System.Serializable]
 public class CardSO : ScriptableObject {
-    public string Name;
-    public string Type;
-    public int Level;
+    [ReadOnly] public string CardId;
+    [ReadOnly] public string Name;
+    [ReadOnly] public string Type;
+    [ReadOnly] public SkillSO Detail;
 }

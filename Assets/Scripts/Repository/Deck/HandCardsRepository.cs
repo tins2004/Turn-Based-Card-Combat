@@ -1,20 +1,21 @@
 using System.Collections.Generic;
+using UnityEngine;
 
-public class HandCardsRepository : Singleton<HandCardsRepository>, IRepository<int, float>
+public class HandCardsRepository : Singleton<HandCardsRepository>, IRepository<string, CardPresenter>
 {
-    private readonly Dictionary<int, float> _data = new Dictionary<int, float>();
+    private readonly Dictionary<string, CardPresenter> _data = new Dictionary<string, CardPresenter>();
     
-    public void Add(int id, float xPos)
+    public void Add(string name, CardPresenter obj)
     {
-        _data[id] = xPos;
+        _data[name] = obj;
     }
 
-    public float Get(int id)
+    public CardPresenter Get(string name)
     {
-        return _data.TryGetValue(id, out var xPos) ? xPos : 0f;
+        return _data.TryGetValue(name, out var obj) ? obj : null;
     }
 
-    public bool Exists(int id)
+    public bool Exists(string id)
     {
        return _data.ContainsKey(id);
     }

@@ -1,15 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSystem>
 {
     [Header("Hover Settings")]
     [SerializeField] private LayerMask floorLayer;
-    [SerializeField] private LayerMask cardLayer;
 
+    [TagSelector] [SerializeField] private string cardTag;
+    
+    private readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
+
+    #region(cell impact)
+    private GameObject lastImpactCell;
+    private int lastHoveredCellIndex;
     private GameObject lastHoveredCell;
-    private List<GameObject> onLineLastHoveredCells = new List<GameObject>();
     private List<int> cellsCanImpact = new List<int>();
+    private List<int> realCellsImpact = new List<int>();
+    private List<int> cellsOnLineImpact = new List<int>();
+    private List<GameObject> onLineLastHoveredCells = new List<GameObject>();
+    #endregion
 
     private CardPresenter cardPresenter;
 
@@ -32,16 +43,28 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         InputSystem.OnPointerUp -= HandlePointerUp;
     }
 
-    private void HandlePointerDown(Vector2 worldPos)
+    private void HandlePointerDown(Vector2 mousePos)
     {
-        RaycastHit2D hit = InputSystem.GetHitUnderPosition(worldPos, cardLayer);
-
-        if (hit.collider != null) 
+        PointerEventData eventData = new PointerEventData(EventSystem.current)
         {
-            cardPresenter = hit.collider.GetComponent<CardPresenter>();
+            position = mousePos
+        };
+
+        _raycastResults.Clear();
+        EventSystem.current.RaycastAll(eventData, _raycastResults);
+
+        for (int i = 0; i < _raycastResults.Count; i++)
+        {
+            var hit = _raycastResults[i];
+            
+            if (!hit.gameObject.CompareTag(cardTag)) continue; 
+            
+            cardPresenter = hit.gameObject.GetComponentInParent<CardPresenter>();
+            
             if (cardPresenter != null)
             {
                 cardPresenter.SelectedCard(true);
+                break;
             }
         }
     }
@@ -85,16 +108,14 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         {            
             RaycastHit2D hit = InputSystem.GetHitUnderPosition(worldPos, floorLayer);
 
-            if (hit.collider != null) 
+            if (hit.collider != null && lastImpactCell != null) 
             {
-                foreach (int cellCanImpact in cellsCanImpact)
+                int cellIndex = GetCellIndexFromCellName(hit.collider.name);
+
+                if (realCellsImpact.Contains(cellIndex))
                 {
-                    int cellIndex = GetCellIndexFromCellName(hit.collider.name);
-                    
-                    if (cellCanImpact == cellIndex)
-                    {
-                        Observer.Notify(ObserverEvents.SELECTED_CELL, cellIndex);   
-                    }
+                    Observer.Notify(ObserverEvents.SELECTED_CELL, lastHoveredCellIndex);   
+                    Observer.Notify(ObserverEvents.USED_CARD, cardPresenter.gameObject.name); 
                 }
             }
 
@@ -102,7 +123,6 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         }
         
         cardPresenter = null;
-        lastHoveredCell = null;
     }
 
     private int GetCellIndexFromCellName(string cellName)
@@ -122,28 +142,47 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     private void NotifyCellHovered(GameObject cell, string cellName, string observerEvents, Color rightColor, Color wrongColor, Color inLineColor)
     {
         
-        cellsCanImpact = cardPresenter.GetCellsCanImpact();
-        foreach (int cellCanImpact in cellsCanImpact)
+        realCellsImpact = cardPresenter.GetRealCellsImpact();
+        int cellIndex = GetCellIndexFromCellName(cellName);
+
+        if (realCellsImpact.Contains(cellIndex))
         {
-            if (cellCanImpact == GetCellIndexFromCellName(cellName))
+            cellsCanImpact = cardPresenter.GetCellsCanImpact(cellIndex);
+
+            if (cellsCanImpact != null && cellsCanImpact.Count > 0)
             {
-                Observer.Notify(observerEvents, new CellHoveredORD(cell, rightColor));
+                foreach (int cellCanImpact in cellsCanImpact)
+                {  
+                    GameObject obj = GridFloorRepository.Instance.Get(cellCanImpact);
+                    if (obj == null) continue;
 
-                if (cardPresenter.rangeCardImpact > 1)
-                {
-                    List<int> cellsOnLineImpact = cardPresenter.GetCellsOnLineImpact(GetCellIndexFromCellName(cellName));
-
-                    foreach (int cellOnLineImpact in cellsOnLineImpact)
-                    {  
-                        GameObject obj = GridFloorRepository.Instance.Get(cellOnLineImpact);
-
-                        Observer.Notify(observerEvents, new CellHoveredORD(obj, inLineColor));
-                        onLineLastHoveredCells.Add(obj);
-                    }
+                    Observer.Notify(observerEvents, new CellHoveredORD(obj, rightColor));
+                    lastImpactCell = obj;
+                    lastHoveredCellIndex = cellCanImpact;
                 }
-
-                return;
             }
+            // else
+            // {
+            //     Observer.Notify(observerEvents, new CellHoveredORD(cell, rightColor));
+            //     lastImpactCell = cell;
+            //     lastHoveredCellIndex = cellIndex;
+            // }
+
+            if (cardPresenter.GetCardData().Detail.RangeSkillImpact > 1)
+            {
+                cellsOnLineImpact = cardPresenter.GetCellsOnLineImpact(cellIndex);
+
+                foreach (int cellOnLineImpact in cellsOnLineImpact)
+                {  
+                    GameObject obj = GridFloorRepository.Instance.Get(cellOnLineImpact);
+                    if (obj == null) continue;
+
+                    Observer.Notify(observerEvents, new CellHoveredORD(obj, inLineColor));
+                    onLineLastHoveredCells.Add(obj);
+                }
+            }
+
+            return;
         }
 
         Observer.Notify(observerEvents, new CellHoveredORD(cell, wrongColor));
@@ -158,6 +197,13 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
             lastHoveredCell = null;
         }
 
+        if(lastImpactCell != null)
+        {
+            Observer.Notify(observerEvents, new CellHoveredORD(lastImpactCell, exitColor));
+        
+            lastImpactCell = null;
+        }
+
         if (onLineLastHoveredCells != null && onLineLastHoveredCells.Count > 0)
         {
             foreach (GameObject cellOnLineImpact in onLineLastHoveredCells)
@@ -167,5 +213,14 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
 
             onLineLastHoveredCells.Clear();
         }
+
+        if (realCellsImpact != null && realCellsImpact.Count > 0)
+            realCellsImpact.Clear();
+
+        if (cellsCanImpact != null && cellsCanImpact.Count > 0)
+            cellsCanImpact.Clear();
+
+        if (cellsOnLineImpact != null && cellsOnLineImpact.Count > 0)
+            cellsOnLineImpact.Clear();
     }
 }

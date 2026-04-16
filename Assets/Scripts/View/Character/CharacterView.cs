@@ -1,8 +1,11 @@
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterPresenter))]
 public class CharacterView : MonoBehaviour
 {
+    [SerializeField] private TMP_Text healthText;
+
     private Transform _transform;
 
     private void Start()
@@ -16,5 +19,10 @@ public class CharacterView : MonoBehaviour
             return;
         
         _transform.localPosition = new Vector2(targetPos.Value.x, targetPos.Value.y);
+    }
+
+    public void UpdateHealthUI(int currentHeart, int maxHeart)
+    {
+        healthText.text = $"{currentHeart}/{maxHeart}";
     }
 }

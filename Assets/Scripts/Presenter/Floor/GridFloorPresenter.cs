@@ -16,13 +16,13 @@ public class GridFloorPresenter : MonoBehaviour
         {
             _view = GetComponent<GridFloorView>();
         }
+
+        _model = new GridFloorModel(width, cellWidth, cellHeight);
+        GenerateGrid();
     }
 
     private void Start()
     {
-        _model = new GridFloorModel(width, cellWidth, cellHeight);
-        GenerateGrid();
-
         SetupObserverListener();
     }
 

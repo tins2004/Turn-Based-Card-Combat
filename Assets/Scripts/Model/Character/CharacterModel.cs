@@ -1,10 +1,10 @@
-using JetBrains.Annotations;
 using UnityEngine;
 
-public class CharacterModel
+public class CharacterModel : BaseEntity
 {
-    private const float YWORDPOSITION = 1.15f;
+    private const float Y_WORD_POSITION = 1.15f;
     public int currentCharacterCell { get; set; }
+
     public ActorOnFloorRepository _actorOnFloorRepository { get; private set; }
     public GridFloorRepository _gridFloorRepository { get; private set; }
 
@@ -12,6 +12,8 @@ public class CharacterModel
     {
         _actorOnFloorRepository = ActorOnFloorRepository.Instance;
         _gridFloorRepository = GridFloorRepository.Instance;
+
+        SetUpEntity(100);
     }
 
     public Vector2? GetTargetPosition(int targetCellIndex)
@@ -23,6 +25,6 @@ public class CharacterModel
             return null;
         }
 
-        return new Vector2(_gridFloorRepository.Get(targetCellIndex).transform.localPosition.x, YWORDPOSITION);
+        return new Vector2(_gridFloorRepository.Get(targetCellIndex).transform.localPosition.x, Y_WORD_POSITION);
     }
 }

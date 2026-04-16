@@ -1,18 +1,46 @@
-using System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(DeckPresenter))]
 public class DeckView : MonoBehaviour
 {
-    [SerializeField] private GameObject cardPrefab;
+    [SerializeField] private TMP_Text drawPileText;
+    [SerializeField] private TMP_Text discardPileText;
 
-    public void SpawnDeck(Vector2 position, string name)
+    public GameObject DrawCardsHand(string cardId, CardTransform transformData, Transform handParent, string name)
     {
-        GameObject obj = Instantiate(cardPrefab, transform);
+        GameObject obj = CardFactory.Instance.CreateCard(cardId, handParent);
 
-        obj.transform.localPosition = position;
+        if (obj != null)
+        {
+            RectTransform rect = obj.GetComponent<RectTransform>();
+            rect.localPosition = transformData.Position;
+            rect.localRotation = transformData.Rotation;
 
-        obj.name = name;
+            obj.name = name;
+
+            return obj;
+        }
+
+        return null;
+    }
+
+    public void DestroyCardHand(GameObject card)
+    {
+        Destroy(card);
+    }
+
+    public void ClearCardsHand(Transform handParent)
+    {
+        foreach (Transform child in handParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void DisplayDeckDemo(int drawPileCount, string drawPileList, int discardPileCount)
+    {
+        drawPileText.text = $"Draw Pile [{drawPileCount}]\n{drawPileList}";
+        discardPileText.text = $"Discard Pile [{discardPileCount}]";
     }
 }
