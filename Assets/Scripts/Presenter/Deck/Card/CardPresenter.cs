@@ -5,7 +5,7 @@ public class CardPresenter : MonoBehaviour
 {
     private CardView _view;
     private CardModel _model;
-    private SkillStrategy _skillStrategy;
+    public SkillStrategy _skillStrategy { get; private set; }
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class CardPresenter : MonoBehaviour
     {
         _model = new CardModel(cardData);
         _skillStrategy = cardData.Detail.SkillAlgorithm;
-        Debug.Log("Set up: " + _skillStrategy);
+        
         _skillStrategy.ConfigDataSKill(cardData.Detail);
 
         _view.UpdateCardVisual(false);

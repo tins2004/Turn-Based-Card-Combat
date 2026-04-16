@@ -1656,6 +1656,7 @@ MonoBehaviour:
   cardConfig:
   - {fileID: 11400000, guid: a12cb89bba853b247ac7d568532b90f9, type: 2}
   - {fileID: 11400000, guid: e8c5bce3d33579746a28505d1874a431, type: 2}
+  - {fileID: 11400000, guid: 57d687d80dcc27f409ab531e192d31db, type: 2}
 --- !u!114 &1574496427
 MonoBehaviour:
   m_ObjectHideFlags: 0

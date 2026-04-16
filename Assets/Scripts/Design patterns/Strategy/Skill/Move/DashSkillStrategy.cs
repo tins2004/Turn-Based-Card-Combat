@@ -5,23 +5,29 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MOVE_DASH_ALGORITHM", menuName = "Asset/Skill Algorithm/Move/Dash")]
 public class DashSkillStrategy : SkillStrategy
 {
+    private int currentCharacterCell;
     private int leftTargetToDash;
     private int rightTargetToDash;
+
+    public override void Execute(BaseActorPresenter actor, int targetCell, SkillSO skillData)
+    {
+        actor.MoveToCell(targetCell);
+    }
 
     public override List<int> GetRealCellsImpact()
     {
         List<int> results = new List<int>();
 
-        int currentCell = _model._actorOnFloorRepository.GetCellOfActorType(1)[0];
+        currentCharacterCell = _model._actorOnFloorRepository.GetCellOfActorType(1)[0];
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
         int range = _model.skillData.RangeSkillImpact;
 
-        leftTargetToDash = Math.Max(0, currentCell - range);
-        rightTargetToDash = Math.Min(limitFloor, currentCell + range);
+        leftTargetToDash = Math.Max(0, currentCharacterCell - range);
+        rightTargetToDash = Math.Min(limitFloor, currentCharacterCell + range);
 
 
-        if (leftTargetToDash != currentCell) results.Add(leftTargetToDash);
-        if (rightTargetToDash != currentCell) results.Add(rightTargetToDash);
+        if (leftTargetToDash != currentCharacterCell) results.Add(leftTargetToDash);
+        if (rightTargetToDash != currentCharacterCell) results.Add(rightTargetToDash);
         
         return results;
     }
@@ -30,7 +36,6 @@ public class DashSkillStrategy : SkillStrategy
     {
         List<int> results = new List<int>();
 
-        int currentCell = _model._actorOnFloorRepository.GetCellOfActorType(1)[0];
         int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(2);
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
 
@@ -39,7 +44,7 @@ public class DashSkillStrategy : SkillStrategy
 
         foreach (int enemyCell in enemiesCell)
         {
-            if (enemyCell >= leftTargetToDash && enemyCell < currentCell)
+            if (enemyCell >= leftTargetToDash && enemyCell < currentCharacterCell)
             {
                 if (enemyCell > closestEnemyLeft)
                 {
@@ -47,7 +52,7 @@ public class DashSkillStrategy : SkillStrategy
                     leftTargetToDash = enemyCell + 1;
                 }
             }
-            else if (enemyCell > currentCell && enemyCell <= rightTargetToDash)
+            else if (enemyCell > currentCharacterCell && enemyCell <= rightTargetToDash)
             {
                 if (enemyCell < closestEnemyRight)
                 {
@@ -57,8 +62,8 @@ public class DashSkillStrategy : SkillStrategy
             }
         }
 
-        if (leftTargetToDash != currentCell && realCellImpact < currentCell) results.Add(leftTargetToDash);
-        if (rightTargetToDash != currentCell && realCellImpact > currentCell) results.Add(rightTargetToDash);
+        if (leftTargetToDash != currentCharacterCell && realCellImpact < currentCharacterCell) results.Add(leftTargetToDash);
+        if (rightTargetToDash != currentCharacterCell && realCellImpact > currentCharacterCell) results.Add(rightTargetToDash);
         
         return results;
     }
@@ -67,12 +72,11 @@ public class DashSkillStrategy : SkillStrategy
     {
         List<int> results = new List<int>();
 
-        int currentCell = _model._actorOnFloorRepository.GetCellOfActorType(1)[0];
         int range = _model.skillData.RangeSkillImpact;
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
 
-        int leftLimit = cellTarget < currentCell ? Math.Max(0, currentCell - range) : currentCell;
-        int rightLimit = cellTarget < currentCell ? currentCell : Math.Min(limitFloor, currentCell + range);
+        int leftLimit = cellTarget < currentCharacterCell ? Math.Max(0, currentCharacterCell - range) : currentCharacterCell;
+        int rightLimit = cellTarget < currentCharacterCell ? currentCharacterCell : Math.Min(limitFloor, currentCharacterCell + range);
 
         for (int i = leftLimit; i <= rightLimit; i++)
         {
@@ -82,9 +86,9 @@ public class DashSkillStrategy : SkillStrategy
             }
         }
 
-        if (!results.Contains(currentCell))
+        if (!results.Contains(currentCharacterCell))
         {
-            results.Add(currentCell);
+            results.Add(currentCharacterCell);
         }
         
         return results;

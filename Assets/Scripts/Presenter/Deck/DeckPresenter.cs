@@ -24,11 +24,14 @@ public class DeckPresenter : MonoBehaviour
 
         List<string> startingCards = new List<string> { 
             "MOVE_DASH",
-            "MOVE_DASH",
+            "ATTACK_BASE_ATTACK",
             "MOVE_TELEPORT",
             "MOVE_TELEPORT",
             "MOVE_TELEPORT",
             "MOVE_TELEPORT",
+            "ATTACK_BASE_ATTACK",
+            "ATTACK_BASE_ATTACK",
+            "ATTACK_BASE_ATTACK",
             "MOVE_DASH",
             "MOVE_DASH"
         };
@@ -71,18 +74,20 @@ public class DeckPresenter : MonoBehaviour
 
         _model.EndTurn();
         _view.ClearCardsHand(handParent);
+
+        StartTurn();
         UpdateHandUI();
     }
     
     private void SetupObserverListener()
     {
-        Observer.AddListener(ObserverEvents.USED_CARD, HandleUsedCard);
+        Observer.AddListener(ObserverEvents.CHOOSE_CARD, HandleUsedCard);
         Observer.AddListener(ObserverEvents.END_TURN, HandleEndTurn);
     }
 
     private void OnDestroy()
     {
-        Observer.RemoveListener(ObserverEvents.USED_CARD, HandleUsedCard);
+        Observer.RemoveListener(ObserverEvents.CHOOSE_CARD, HandleUsedCard);
         Observer.RemoveListener(ObserverEvents.END_TURN, HandleEndTurn);
     }
 }

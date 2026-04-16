@@ -18,4 +18,4 @@ MonoBehaviour:
   Description: "G\xE2y V s\xE1t th\u01B0\u01A1ng l\xEAn R \xF4 ph\xEDa tr\u01B0\u1EDBc."
   RangeSkillImpact: 1
   ImpactValue: 7
-  SkillAlgorithm: {fileID: 0}
+  SkillAlgorithm: {fileID: 11400000, guid: 88df3ab79c411e74a9ca9186ab9353c6, type: 2}

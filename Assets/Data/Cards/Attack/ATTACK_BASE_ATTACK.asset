@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6df50fa4142b22d49abc644b21ce36ef, type: 3}
-  m_Name: ATTACK_ATTACK
+  m_Name: ATTACK_BASE_ATTACK
   m_EditorClassIdentifier: Assembly-CSharp::CardSO
-  CardId: ATTACK_ATTACK
+  CardId: ATTACK_BASE_ATTACK
   Name: "T\u1EA5n c\xF4ng"
   Type: Attack
   Detail: {fileID: 11400000, guid: 2fc44bf190476894a8b9d23310153b7e, type: 2}

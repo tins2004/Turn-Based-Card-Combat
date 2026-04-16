@@ -14,6 +14,11 @@ public abstract class SkillStrategy : ScriptableObject
     {
         return _model.skillData;
     }
+    
+    /// <summary>
+    /// Execute the skill's effect on the target cell, applying damage, healing, or other effects as defined by the skill's logic.
+    /// </summary>
+    public abstract void Execute(BaseActorPresenter actor, int targetCell, SkillSO skillData);
 
     /// <summary>
     /// 

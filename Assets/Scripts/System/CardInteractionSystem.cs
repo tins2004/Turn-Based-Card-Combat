@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -114,8 +115,8 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
 
                 if (realCellsImpact.Contains(cellIndex))
                 {
-                    Observer.Notify(ObserverEvents.SELECTED_CELL, lastHoveredCellIndex);   
-                    Observer.Notify(ObserverEvents.USED_CARD, cardPresenter.gameObject.name); 
+                    Observer.Notify(ObserverEvents.USED_CARD, new CardActionORD(cardPresenter._skillStrategy, lastHoveredCellIndex));   
+                    Observer.Notify(ObserverEvents.CHOOSE_CARD, cardPresenter.gameObject.name); 
                 }
             }
 
@@ -168,7 +169,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
             //     lastHoveredCellIndex = cellIndex;
             // }
 
-            if (cardPresenter.GetCardData().Detail.RangeSkillImpact > 1)
+            if (cardPresenter.GetCardData().Detail.RangeSkillImpact > 0)
             {
                 cellsOnLineImpact = cardPresenter.GetCellsOnLineImpact(cellIndex);
 

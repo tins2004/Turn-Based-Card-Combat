@@ -1,9 +1,9 @@
 public static class ObserverEvents
 {
     #region(Cell and Card)
-    public const string SELECTED_CELL = "SELECTED_CELL";
     public const string CELL_HOVERED = "CELL_HOVERED";
     public const string USED_CARD = "USED_CARD";
+    public const string CHOOSE_CARD = "CHOOSE_CARD";
     #endregion
 
     #region(Run System)

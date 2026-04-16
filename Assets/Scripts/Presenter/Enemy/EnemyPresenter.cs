@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class EnemyPresenter : MonoBehaviour
+public class EnemyPresenter : BaseActorPresenter
 {    
     private EnemyView _view;
-    private EnemyModel _model;
 
     private void Awake()
     {
@@ -15,42 +14,39 @@ public class EnemyPresenter : MonoBehaviour
 
     public void SetUpEnemy(EnemySO enemyData)
     {
-        SetupObserverListener();
+        // SetupObserverListener();
         
         _model = new EnemyModel(enemyData);
 
         _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
     }
 
-    public void MoveToCell(int cell)
+    public override void MoveToCell(int targetCell)
     {
-        _view.ChangePosition(_model.GetTargetPosition(cell));
+        base.MoveToCell(targetCell);
 
-        if (_model._actorOnFloorRepository.Exists(_model.currentEnemyCell))
-        {
-            if (_model._actorOnFloorRepository.Get(_model.currentEnemyCell) == 2)
-            {
-                _model._actorOnFloorRepository.Add(_model.currentEnemyCell, 0);
-            }
-        }
-
-        _model.currentEnemyCell = cell;
-        _model._actorOnFloorRepository.Add(cell, 2);
+        _view.ChangePosition(_model.GetTargetPosition(targetCell));
     }
 
-    private void HandleTakeDamage(object data)
+    public override void TakeDamage(int damage)
     {
-        _model.TakeDamage((int)data);
+        _model.TakeDamage(damage);
         _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
     }
 
-    private void SetupObserverListener()
-    {
-        Observer.AddListener(ObserverEvents.ENEMY_TAKE_DAMAGE, HandleTakeDamage);
-    }
+    // private void HandleTakeDamage(object data)
+    // {
+    //     _model.TakeDamage((int)data);
+    //     _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+    // }
 
-    private void OnDestroy()
-    {
-        Observer.RemoveListener(ObserverEvents.ENEMY_TAKE_DAMAGE, HandleTakeDamage);
-    }
+    // private void SetupObserverListener()
+    // {
+    //     Observer.AddListener(ObserverEvents.ENEMY_TAKE_DAMAGE, HandleTakeDamage);
+    // }
+
+    // private void OnDestroy()
+    // {
+    //     Observer.RemoveListener(ObserverEvents.ENEMY_TAKE_DAMAGE, HandleTakeDamage);
+    // }
 }

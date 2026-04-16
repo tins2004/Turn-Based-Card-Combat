@@ -1,26 +1,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IRepository<int, int>
+public struct ActorOnFloorData
 {
+    /// <summary>
+    /// Actor Type: 0 is Space, 1 is Character, 2 is Enemy
+    /// </summary>
+    public int actorType;
+    public BaseActorPresenter actorObject;
+}
+
+public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IRepository<int, ActorOnFloorData>
+{
+
     private readonly Dictionary<int, int> _data = new Dictionary<int, int>();
+    private readonly Dictionary<int, BaseActorPresenter> _actorObjects = new Dictionary<int, BaseActorPresenter>();
     
     /// <summary>
     /// Actor Type: 0 is Space, 1 is Character, 2 is Enemy
     /// </summary>
-    public void Add(int cell, int actorType)
+    public void Add(int cell, ActorOnFloorData actorOnFloorData)
     {
-        if (actorType > 2) return;
+        if (actorOnFloorData.actorType > 2) return;
 
-        _data[cell] = actorType;
+        _data[cell] = actorOnFloorData.actorType;
+
+        if (actorOnFloorData.actorType != 0 && actorOnFloorData.actorObject != null)
+        {
+            _actorObjects[cell] = actorOnFloorData.actorObject;
+        }
     }
 
     /// <summary>
     /// Actor Type: 0 is Space, 1 is Character, 2 is Enemy
     /// </summary>
-    public int Get(int cell)
+    public ActorOnFloorData Get(int cell)
+    {
+        return _data.TryGetValue(cell, out var actorType) ? new ActorOnFloorData { actorType = actorType, actorObject = GetActorObject(cell) } : new ActorOnFloorData { actorType = 0, actorObject = null };
+    }
+
+    public int GetActorType(int cell)
     {
         return _data.TryGetValue(cell, out var actorType) ? actorType : 0;
+    }
+
+    public BaseActorPresenter GetActorObject(int cell)
+    {
+        return _actorObjects.TryGetValue(cell, out var actorObject) ? actorObject : null;
     }
 
     /// <summary>

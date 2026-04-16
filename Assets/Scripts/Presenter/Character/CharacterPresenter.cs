@@ -1,12 +1,11 @@
 using UnityEngine;
 
-public class CharacterPresenter : MonoBehaviour
+public class CharacterPresenter : BaseActorPresenter
 {
     [Header("Grid Settings")]
     [SerializeField] private int spawnPos = 0;
 
     private CharacterView _view;
-    private CharacterModel _model;
 
     private void Awake()
     {
@@ -26,42 +25,42 @@ public class CharacterPresenter : MonoBehaviour
         SetupObserverListener();
     }
 
-    private void MoveToCell(int cell)
+    public override void MoveToCell(int targetCell)
     {
-        _view.ChangePosition(_model.GetTargetPosition(cell));
+        base.MoveToCell(targetCell);
 
-        if (_model._actorOnFloorRepository.Exists(_model.currentCharacterCell))
+        _view.ChangePosition(_model.GetTargetPosition(targetCell));
+    }
+
+    private void HandleUsedCard(object data)
+    {
+        if (data is CardActionORD cardAction)
         {
-            if (_model._actorOnFloorRepository.Get(_model.currentCharacterCell) == 1)
-            {
-                _model._actorOnFloorRepository.Add(_model.currentCharacterCell, 0);
-            }
+            cardAction.skillStrategy.Execute(this, cardAction.cellTarget, cardAction.skillStrategy.GetSkillData());
         }
-
-        _model.currentCharacterCell = cell;
-        _model._actorOnFloorRepository.Add(cell, 1);
     }
 
-    private void HandleSelectedCell(object data)
+    public override void TakeDamage(int damage)
     {
-        MoveToCell((int)data);
-    }
-
-    private void HandleTakeDamage(object data)
-    {
-        _model.TakeDamage((int)data);
+        _model.TakeDamage(damage);
         _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
     }
 
+    // private void HandleTakeDamage(object data)
+    // {
+    //     _model.TakeDamage((int)data);
+    //     _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+    // }
+
     private void SetupObserverListener()
     {
-        Observer.AddListener(ObserverEvents.SELECTED_CELL, HandleSelectedCell);
-        Observer.AddListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
+        Observer.AddListener(ObserverEvents.USED_CARD, HandleUsedCard);
+        // Observer.AddListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
     }
 
     private void OnDestroy()
     {
-        Observer.RemoveListener(ObserverEvents.SELECTED_CELL, HandleSelectedCell);
-        Observer.RemoveListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
+        Observer.RemoveListener(ObserverEvents.USED_CARD, HandleUsedCard);
+        // Observer.RemoveListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
     }
 }
