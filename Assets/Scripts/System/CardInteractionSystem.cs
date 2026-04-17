@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 
 public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSystem>
 {
@@ -17,18 +15,21 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     private GameObject lastImpactCell;
     private int lastHoveredCellIndex;
     private GameObject lastHoveredCell;
-    private List<int> cellsCanImpact = new List<int>();
-    private List<int> realCellsImpact = new List<int>();
-    private List<int> cellsOnLineImpact = new List<int>();
+    private List<int> cellsCanImpactInt = new List<int>();
+    private List<int> realCellsImpactInt = new List<int>();
+    private List<int> cellsOnLineImpactInt = new List<int>();
+    private List<GameObject> realImpactCells = new List<GameObject>();
     private List<GameObject> onLineLastHoveredCells = new List<GameObject>();
     #endregion
 
     private CardPresenter cardPresenter;
+    private GridFloorRepository _gridFloorRepository;
     private ActorOnFloorRepository _actorOnFloorRepository;
 
     private void Start()
     {
         cardPresenter = null;
+        _gridFloorRepository = GridFloorRepository.Instance;
         _actorOnFloorRepository = ActorOnFloorRepository.Instance;
     }
 
@@ -67,6 +68,18 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
             if (cardPresenter != null)
             {
                 cardPresenter.SelectedCard(true);
+
+                realCellsImpactInt = cardPresenter.GetRealCellsImpact(_actorOnFloorRepository.GetCellOfActorType(1)[0], 1);
+                foreach (int cellImpact in realCellsImpactInt)
+                {
+                    GameObject obj = _gridFloorRepository.Get(cellImpact);
+                    if (obj == null) continue;
+                    realImpactCells.Add(obj);
+                }
+
+                NotifyRealCellsImpact(ObserverEvents.CELL_HOVERED, Color.blue);
+                
+
                 break;
             }
         }
@@ -92,12 +105,13 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
                 NotifyCellHovered(currentObject, hit.collider.name, ObserverEvents.CELL_HOVERED, 
                                         rightColor: Color.green,
                                         wrongColor: Color.red,
-                                        inLineColor: Color.yellow);
+                                        inLineColor: Color.yellowGreen);
             }
         }
         else
         {
             NotifyCellMouseExit(ObserverEvents.CELL_HOVERED, Color.white);
+            NotifyRealCellsImpactExitColor(ObserverEvents.CELL_HOVERED, Color.blue);
         }
     }
 
@@ -115,7 +129,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
             {
                 int cellIndex = GetCellIndexFromCellName(hit.collider.name);
 
-                if (realCellsImpact.Contains(cellIndex))
+                if (realCellsImpactInt.Contains(cellIndex))
                 {
                     Observer.Notify(ObserverEvents.USED_CARD, new CardActionORD(cardPresenter._skillStrategy, lastHoveredCellIndex));   
                     Observer.Notify(ObserverEvents.CHOOSE_CARD, cardPresenter.gameObject.name); 
@@ -126,6 +140,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         }
         
         cardPresenter = null;
+        NotifyRealCellsImpactClear(ObserverEvents.CELL_HOVERED, Color.white);
     }
 
     private int GetCellIndexFromCellName(string cellName)
@@ -144,18 +159,19 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     
     private void NotifyCellHovered(GameObject cell, string cellName, string observerEvents, Color rightColor, Color wrongColor, Color inLineColor)
     {
-        realCellsImpact = cardPresenter.GetRealCellsImpact(_actorOnFloorRepository.GetCellOfActorType(1)[0], 1);
+        NotifyRealCellsImpactExitColor(observerEvents, Color.white);
+
         int cellIndex = GetCellIndexFromCellName(cellName);
 
-        if (realCellsImpact.Contains(cellIndex))
+        if (realCellsImpactInt.Contains(cellIndex))
         {
-            cellsCanImpact = cardPresenter.GetCellsCanImpact(cellIndex);
+            cellsCanImpactInt = cardPresenter.GetCellsCanImpact(cellIndex);
 
-            if (cellsCanImpact != null && cellsCanImpact.Count > 0)
+            if (cellsCanImpactInt != null && cellsCanImpactInt.Count > 0)
             {
-                foreach (int cellCanImpact in cellsCanImpact)
+                foreach (int cellCanImpact in cellsCanImpactInt)
                 {  
-                    GameObject obj = GridFloorRepository.Instance.Get(cellCanImpact);
+                    GameObject obj = _gridFloorRepository.Get(cellCanImpact);
                     if (obj == null) continue;
 
                     Observer.Notify(observerEvents, new CellHoveredORD(obj, rightColor));
@@ -172,11 +188,11 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
 
             if (cardPresenter.GetCardData().Detail.RangeSkillImpact > 0)
             {
-                cellsOnLineImpact = cardPresenter.GetCellsOnLineImpact(cellIndex);
+                cellsOnLineImpactInt = cardPresenter.GetCellsOnLineImpact(cellIndex);
 
-                foreach (int cellOnLineImpact in cellsOnLineImpact)
+                foreach (int cellOnLineImpact in cellsOnLineImpactInt)
                 {  
-                    GameObject obj = GridFloorRepository.Instance.Get(cellOnLineImpact);
+                    GameObject obj = _gridFloorRepository.Get(cellOnLineImpact);
                     if (obj == null) continue;
 
                     Observer.Notify(observerEvents, new CellHoveredORD(obj, inLineColor));
@@ -216,13 +232,45 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
             onLineLastHoveredCells.Clear();
         }
 
-        if (realCellsImpact != null && realCellsImpact.Count > 0)
-            realCellsImpact.Clear();
+        if (cellsCanImpactInt != null && cellsCanImpactInt.Count > 0)
+            cellsCanImpactInt.Clear();
 
-        if (cellsCanImpact != null && cellsCanImpact.Count > 0)
-            cellsCanImpact.Clear();
+        if (cellsOnLineImpactInt != null && cellsOnLineImpactInt.Count > 0)
+            cellsOnLineImpactInt.Clear();
+    }
 
-        if (cellsOnLineImpact != null && cellsOnLineImpact.Count > 0)
-            cellsOnLineImpact.Clear();
+    private void NotifyRealCellsImpact(string observerEvents, Color color)
+    {   
+        if (realImpactCells != null && realImpactCells.Count > 0)
+        {
+            foreach (GameObject cellOnLineImpact in realImpactCells)
+            {
+                Observer.Notify(observerEvents, new CellHoveredORD(cellOnLineImpact, color));
+            }
+        }
+    }
+
+    private void NotifyRealCellsImpactExitColor(string observerEvents, Color exitColor)
+    {   
+        if (realImpactCells != null && realImpactCells.Count > 0)
+        {
+            foreach (GameObject cellOnLineImpact in realImpactCells)
+            {
+                Observer.Notify(observerEvents, new CellHoveredORD(cellOnLineImpact, exitColor));
+            }
+        }
+    }
+
+    private void NotifyRealCellsImpactClear(string observerEvents, Color exitColor)
+    {
+        if (realImpactCells != null && realImpactCells.Count > 0)
+        {
+            NotifyRealCellsImpactExitColor(observerEvents, exitColor);
+
+            realImpactCells.Clear();
+        }
+
+        if (realCellsImpactInt != null && realCellsImpactInt.Count > 0)
+            realCellsImpactInt.Clear();
     }
 }
