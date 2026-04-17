@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14a6c3bad7dbe5942b1e3e041b6963f8, type: 3}
+  m_Name: WARRIOR_AXE
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySO
+  EnemyId: WARRIOR_AXE
+  Name: "R\xECu"
+  Type: Warrior
+  EnemySkill:
+  - {fileID: 11400000, guid: d90d414fc183f7944a61664d7a66be58, type: 2}
+  - {fileID: 11400000, guid: 2fc44bf190476894a8b9d23310153b7e, type: 2}
+  Animations:
+  - animationType: 2
+    sprites:
+    - {fileID: -1267550136445687439, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: 6151619871726895459, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: -6327378166219303843, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: 5373139676217456927, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: 4097080491917255687, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: 2928054160323077273, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: 5492190999761597152, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+    - {fileID: 7587918059113247910, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+  - animationType: 0
+    sprites:
+    - {fileID: 4690516624981630074, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
+    - {fileID: 4820607410664315775, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
+    - {fileID: 499994813579836661, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
+    - {fileID: 5281750946635039065, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
+    - {fileID: 6324080537177615244, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
+    - {fileID: 3960961710712497688, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}

@@ -3,17 +3,8 @@ using System.Collections.Generic;
 
 public class EnemyFactory : SingletonMonoBehaviour<EnemyFactory>
 {
-    [System.Serializable]
-    private struct EnemyConfig
-    {
-        [Required]
-        public EnemySO enemyData;
-        [Required]
-        public GameObject enemyPrefab;
-    }
-
-    [SerializeField] private List<EnemyConfig> enemyConfig;
-    private Dictionary<string, GameObject> prefabMapping = new Dictionary<string, GameObject>();
+    [SerializeField] [Required] private ObjectPool enemyPool;
+    [SerializeField] private List<EnemySO> enemyConfig;
     private Dictionary<string, EnemySO> dataMapping = new Dictionary<string, EnemySO>();
 
     protected override void Awake()
@@ -22,18 +13,18 @@ public class EnemyFactory : SingletonMonoBehaviour<EnemyFactory>
         
         foreach (var enemy in enemyConfig)
         {
-            prefabMapping[enemy.enemyData.EnemyId] = enemy.enemyPrefab;
-            dataMapping[enemy.enemyData.EnemyId] = enemy.enemyData;
+            dataMapping[enemy.EnemyId] = enemy;
         }
     }
 
     public EnemyPresenter CreateEnemy(string enemyId, Transform parent)
     {
-        if (prefabMapping.TryGetValue(enemyId, out GameObject prefab))
+        if (dataMapping.TryGetValue(enemyId, out EnemySO enemyData))
         {
-            EnemyPresenter enemyPresenter = Instantiate(prefab, parent).GetComponent<EnemyPresenter>();
-            
-            enemyPresenter.SetUpEnemy(dataMapping[enemyId]);
+            EnemyPresenter enemyPresenter = enemyPool.GetObject().GetComponent<EnemyPresenter>();
+            enemyPresenter.transform.SetParent(parent);
+
+            enemyPresenter.SetUpEnemy(enemyData);
 
             return enemyPresenter;
         }

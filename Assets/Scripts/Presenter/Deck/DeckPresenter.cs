@@ -23,12 +23,12 @@ public class DeckPresenter : MonoBehaviour
         SetupObserverListener();
 
         List<string> startingCards = new List<string> { 
-            "MOVE_DASH",
+            "MOVE_WALK",
             "ATTACK_BASE_ATTACK",
             "MOVE_TELEPORT",
             "MOVE_TELEPORT",
-            "MOVE_TELEPORT",
-            "MOVE_TELEPORT",
+            "MOVE_WALK",
+            "MOVE_WALK",
             "ATTACK_BASE_ATTACK",
             "ATTACK_BASE_ATTACK",
             "ATTACK_BASE_ATTACK",
@@ -44,10 +44,16 @@ public class DeckPresenter : MonoBehaviour
     public void StartTurn()
     {
         _model.DrawCards(cardsPerTurn);
-        UpdateHandUI();
+        DrawVisualCards();
     }
 
-    private void UpdateHandUI()
+    public void EndTurn()
+    {
+        _model.EndTurn();
+        _view.ClearCardsHand(handParent);
+    }
+
+    private void DrawVisualCards()
     {
         _view.ClearCardsHand(handParent);
 
@@ -64,30 +70,32 @@ public class DeckPresenter : MonoBehaviour
 
     public void HandleUsedCard(object data)
     {
-        _model.UsedCard(data.ToString());
-        UpdateHandUI();
-    }
+        GameObject usedCard = _model.UsedCard(data.ToString());
 
-    public void HandleEndTurn(object data)
-    {
-        if (!(bool)data) return;
+        _view.DestroyCardHand(usedCard);
 
-        _model.EndTurn();
-        _view.ClearCardsHand(handParent);
-
-        StartTurn();
-        UpdateHandUI();
+        int childCount = 0;
+        foreach (RectTransform child in handParent)
+        {
+            if (child.gameObject.activeSelf) 
+            {
+                _view.ArrangeCardsHand(_model.GetCardVisualTransform(childCount), child);
+                childCount++;
+            }
+        }
     }
     
     private void SetupObserverListener()
     {
         Observer.AddListener(ObserverEvents.CHOOSE_CARD, HandleUsedCard);
-        Observer.AddListener(ObserverEvents.END_TURN, HandleEndTurn);
+        // Observer.AddListener(ObserverEvents.PLAYER_END_TURN, HandleEndTurn);
+        // Observer.AddListener(ObserverEvents.ENEMY_END_TURN, HandleStartTurn);
     }
 
     private void OnDestroy()
     {
         Observer.RemoveListener(ObserverEvents.CHOOSE_CARD, HandleUsedCard);
-        Observer.RemoveListener(ObserverEvents.END_TURN, HandleEndTurn);
+        // Observer.RemoveListener(ObserverEvents.PLAYER_END_TURN, HandleEndTurn);
+        // Observer.RemoveListener(ObserverEvents.ENEMY_END_TURN, HandleStartTurn);
     }
 }

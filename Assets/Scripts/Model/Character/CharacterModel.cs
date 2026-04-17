@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class CharacterModel : BaseActorModel
 {
-    public CharacterModel()
+    public CharacterSO characterData
     {
-        SetUpActor(100);
+        get { return actorData as CharacterSO; }
+    }
+
+    public CharacterModel(CharacterSO characterData)
+    {
+        SetUpActor(100, characterData);
     }
 }

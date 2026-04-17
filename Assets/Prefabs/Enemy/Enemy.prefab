@@ -113,8 +113,10 @@ GameObject:
   - component: {fileID: 3472799403996059011}
   - component: {fileID: 5274709458880678834}
   - component: {fileID: 6562746557599316565}
+  - component: {fileID: 3951352779322333423}
+  - component: {fileID: 8825814793493560458}
   m_Layer: 0
-  m_Name: Warrior Enemy
+  m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162,6 +164,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyView
   healthText: {fileID: 5338414863860783835}
+--- !u!114 &3951352779322333423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745782081180470502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fbb7d282a1d3094ea86643e15e489ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ActorSpriteAnimator
+  _spriteRenderer: {fileID: 7792708896046070184}
+  framesPerSecond: 20
+--- !u!114 &8825814793493560458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1745782081180470502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3573e2a6566efec48822f9382467d628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StateManager
 --- !u!1 &3602695239034995829
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,9 +429,9 @@ Transform:
   m_GameObject: {fileID: 8195275273520055982}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 2, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: -0.24, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3472799403996059011}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -456,8 +484,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.5622641, g: 0.23233175, b: 0.4977235, a: 1}
+  m_Sprite: {fileID: -1267550136445687439, guid: 1b38e8dab294c4247bd2d80022e919e2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

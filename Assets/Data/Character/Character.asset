@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8aac0070617aa8b4494210fbb2e6b8a2, type: 3}
+  m_Name: Character
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterSO
+  Health: 100
+  Mana: 10
+  StartingCard: {fileID: 11400000, guid: 57d687d80dcc27f409ab531e192d31db, type: 2}
+  Animations:
+  - animationType: 2
+    sprites:
+    - {fileID: 7384290322352760091, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: 5558041129755138300, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: 5494728702781700201, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: 855971943943930739, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: 8590257050535953886, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: -1175184007495930954, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: -4675935811743254547, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+    - {fileID: 1839488653993705794, guid: 66a7275d879dc8540a181f7416ecb436, type: 3}
+  - animationType: 0
+    sprites:
+    - {fileID: -3464697531994304634, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}
+    - {fileID: 8738852634765236386, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}
+    - {fileID: 1435813858662126931, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}
+    - {fileID: 2647078634671427691, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}

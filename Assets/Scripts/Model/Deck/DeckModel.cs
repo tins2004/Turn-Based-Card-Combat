@@ -72,9 +72,15 @@ public class DeckModel
         hand.Clear();
     }
 
-    public void UsedCard(string cardName)
+    public GameObject UsedCard(string cardName)
     {
         CardPresenter cardPresenter = _handCardsRepository.Get(cardName);
+
+        if (cardPresenter == null)
+        {
+            Debug.LogError($"Card {cardName} not found in HandCardsRepository!");
+            return null;
+        }
 
         for (int i = 0; i < hand.Count; i++)
         {
@@ -86,6 +92,8 @@ public class DeckModel
                 break;
             }
         }
+        
+        return cardPresenter.gameObject;
     }
 
     // public Vector2 GetCenterOffset()

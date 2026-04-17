@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class CardFactory : SingletonMonoBehaviour<CardFactory>
 {
-    [SerializeField] private GameObject cardPrefab;
+    [SerializeField] [Required] private ObjectPool cardPool;
     [SerializeField] private List<CardSO> cardConfig;
     private Dictionary<string, CardSO> dataMapping = new Dictionary<string, CardSO>();
 
@@ -21,8 +21,9 @@ public class CardFactory : SingletonMonoBehaviour<CardFactory>
     {
         if (dataMapping.TryGetValue(cardId, out CardSO cardData))
         {
-            GameObject obj = Instantiate(cardPrefab, parent);
-            
+            GameObject obj = cardPool.GetObject();
+
+            obj.transform.SetParent(parent);
             obj.GetComponent<CardPresenter>().SetUpCard(cardData);
 
             return obj;

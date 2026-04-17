@@ -27,7 +27,8 @@ public class GridFloorView : MonoBehaviour
         if (spriteRenderer != null) 
         {
             Color color = newColor;
-            color.a = (newColor != Color.white) ? 1f : 0.2f;
+    
+            color.a = (newColor != Color.white) ? 0.3f : 0f;
             spriteRenderer.color = color;
         }
     }

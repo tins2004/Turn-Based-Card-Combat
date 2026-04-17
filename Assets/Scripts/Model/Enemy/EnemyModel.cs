@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class EnemyModel : BaseActorModel
 {
-    public EnemySO enemyData { get; private set; }
-
+    public EnemySO enemyData
+    {
+        get { return actorData as EnemySO; }
+    }
+    
     public EnemyModel(EnemySO enemyData)
     {
-        this.enemyData = enemyData;
-
-        SetUpActor(100);
+        SetUpActor(100, enemyData);
     }
 }

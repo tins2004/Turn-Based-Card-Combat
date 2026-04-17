@@ -40,7 +40,7 @@ public class CardPresenter : MonoBehaviour
     /// 
     /// </summary>
     /// <returns>Array Cells follow range of card</returns>
-    public List<int> GetRealCellsImpact() => _skillStrategy.GetRealCellsImpact();
+    public List<int> GetRealCellsImpact(int actorCell, int actorType) => _skillStrategy.GetRealCellsImpact(actorCell, actorType);
 
     /// <summary>
     /// 

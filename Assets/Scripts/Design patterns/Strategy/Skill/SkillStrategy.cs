@@ -24,7 +24,7 @@ public abstract class SkillStrategy : ScriptableObject
     /// 
     /// </summary>
     /// <returns>Array Cells follow range of card</returns>
-    public abstract List<int> GetRealCellsImpact();
+    public abstract List<int> GetRealCellsImpact(int actorCell, int actorType);
 
     /// <summary>
     /// 

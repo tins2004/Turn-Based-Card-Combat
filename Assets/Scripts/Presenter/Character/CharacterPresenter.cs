@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class CharacterPresenter : BaseActorPresenter
 {
+    [SerializeField] private CharacterSO characterData;
+    
     [Header("Grid Settings")]
     [SerializeField] private int spawnPos = 0;
 
@@ -17,12 +19,18 @@ public class CharacterPresenter : BaseActorPresenter
 
     private void Start()
     {
-        _model = new CharacterModel();
+        _model = new CharacterModel(characterData);
 
+        _view.IdleAnimation(characterData);
         _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
         MoveToCell(spawnPos);
 
         SetupObserverListener();
+    }
+
+    public override ScriptableObject GetActorData()
+    {
+        return _model.actorData as CharacterSO;
     }
 
     public override void MoveToCell(int targetCell)
@@ -32,18 +40,27 @@ public class CharacterPresenter : BaseActorPresenter
         _view.ChangePosition(_model.GetTargetPosition(targetCell));
     }
 
+    public override void Attack(int targetCell, int damage)
+    {
+        base.Attack(targetCell, damage);
+
+        _view.AttackAnimation();
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        _model.TakeDamage(damage);
+
+        _view.TakeDamageAnimation();
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+    }
+
     private void HandleUsedCard(object data)
     {
         if (data is CardActionORD cardAction)
         {
             cardAction.skillStrategy.Execute(this, cardAction.cellTarget, cardAction.skillStrategy.GetSkillData());
         }
-    }
-
-    public override void TakeDamage(int damage)
-    {
-        _model.TakeDamage(damage);
-        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
     }
 
     // private void HandleTakeDamage(object data)

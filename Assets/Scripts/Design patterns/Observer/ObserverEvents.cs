@@ -6,15 +6,16 @@ public static class ObserverEvents
     public const string CHOOSE_CARD = "CHOOSE_CARD";
     #endregion
 
-    #region(Run System)
-    public const string END_TURN = "END_TURN";
-    #endregion
+    // #region(Run System)
+    // public const string PLAYER_END_TURN = "PLAYER_END_TURN";
+    // public const string ENEMY_END_TURN = "ENEMY_END_TURN";
+    // #endregion
 
-    #region(Character)
-    public const string CHARACTER_TAKE_DAMAGE = "CHARACTER_TAKE_DAMAGE";
-    #endregion
+    // #region(Character)
+    // public const string CHARACTER_TAKE_DAMAGE = "CHARACTER_TAKE_DAMAGE";
+    // #endregion
 
-    #region(Enemy)
-    public const string ENEMY_TAKE_DAMAGE = "ENEMY_TAKE_DAMAGE";
-    #endregion
+    // #region(Enemy)
+    // public const string ENEMY_TAKE_DAMAGE = "ENEMY_TAKE_DAMAGE";
+    // #endregion
 }

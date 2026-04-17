@@ -4,6 +4,8 @@ public abstract class BaseActorModel
 {   
     public const float Y_WORD_POSITION = 1.15f;
 
+    public ScriptableObject actorData { get; private set; }
+
     public ActorOnFloorRepository _actorOnFloorRepository { get; private set; }
     public GridFloorRepository _gridFloorRepository { get; private set; }
 
@@ -14,8 +16,10 @@ public abstract class BaseActorModel
 
     public int baseAttackDamage { get; private set; }
 
-    public virtual void SetUpActor(int maxHealth, int baseAttackDamage = 10)
+    public virtual void SetUpActor(int maxHealth, ScriptableObject actorData,  int baseAttackDamage = 10)
     {
+        this.actorData = actorData;
+
         _actorOnFloorRepository = ActorOnFloorRepository.Instance;
         _gridFloorRepository = GridFloorRepository.Instance;
 

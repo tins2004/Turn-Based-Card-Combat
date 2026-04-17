@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c3cdb7126f381d14a9c1fe0f8cce5161
+guid: 9ac4b49efa73e1d4b8dfd4f8e8446aae
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1514652304594035709
-    second: Screenshot_20260410-110535_0
+      213: -939393293661800170
+    second: Water Background color_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Screenshot_20260410-110535_0
+      name: Water Background color_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 409
-        height: 220
+        width: 64
+        height: 64
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 30c127201cfdafae0800000000000000
-      internalID: -1514652304594035709
+      spriteID: 61977eac6ca96f2f0800000000000000
+      internalID: -939393293661800170
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Screenshot_20260410-110535_0: -1514652304594035709
+      Water Background color_0: -939393293661800170
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

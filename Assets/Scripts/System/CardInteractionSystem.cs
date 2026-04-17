@@ -24,10 +24,12 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     #endregion
 
     private CardPresenter cardPresenter;
+    private ActorOnFloorRepository _actorOnFloorRepository;
 
     private void Start()
     {
         cardPresenter = null;
+        _actorOnFloorRepository = ActorOnFloorRepository.Instance;
     }
 
     private void OnEnable()
@@ -142,8 +144,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     
     private void NotifyCellHovered(GameObject cell, string cellName, string observerEvents, Color rightColor, Color wrongColor, Color inLineColor)
     {
-        
-        realCellsImpact = cardPresenter.GetRealCellsImpact();
+        realCellsImpact = cardPresenter.GetRealCellsImpact(_actorOnFloorRepository.GetCellOfActorType(1)[0], 1);
         int cellIndex = GetCellIndexFromCellName(cellName);
 
         if (realCellsImpact.Contains(cellIndex))

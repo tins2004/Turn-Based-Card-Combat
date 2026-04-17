@@ -9,7 +9,7 @@ public class TeleportSkillStrategy : SkillStrategy
         actor.MoveToCell(targetCell);
     }
     
-    public override List<int> GetRealCellsImpact()
+    public override List<int> GetRealCellsImpact(int actorCell, int actorType)
     {
         List<int> results = new List<int>();
 

@@ -12,12 +12,12 @@ public class BaseAttackStrategy : SkillStrategy
         actor.Attack(targetCell, skillData.ImpactValue);
     }
 
-    public override List<int> GetRealCellsImpact()
+    public override List<int> GetRealCellsImpact(int actorCell, int actorType)
     {
         List<int> results = new List<int>();
 
-        currentCharacterCell = _model._actorOnFloorRepository.GetCellOfActorType(1)[0];
-        int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(2);
+        currentCharacterCell = actorCell;
+        int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
 
         foreach (int enemyCell in enemiesCell)

@@ -9,22 +9,24 @@ public class DashSkillStrategy : SkillStrategy
     private int leftTargetToDash;
     private int rightTargetToDash;
 
+    private int actorType;
+
     public override void Execute(BaseActorPresenter actor, int targetCell, SkillSO skillData)
     {
         actor.MoveToCell(targetCell);
     }
 
-    public override List<int> GetRealCellsImpact()
+    public override List<int> GetRealCellsImpact(int actorCell, int actorType)
     {
         List<int> results = new List<int>();
-
-        currentCharacterCell = _model._actorOnFloorRepository.GetCellOfActorType(1)[0];
+        
+        this.actorType = actorType;
+        currentCharacterCell = actorCell;
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
         int range = _model.skillData.RangeSkillImpact;
 
         leftTargetToDash = Math.Max(0, currentCharacterCell - range);
         rightTargetToDash = Math.Min(limitFloor, currentCharacterCell + range);
-
 
         if (leftTargetToDash != currentCharacterCell) results.Add(leftTargetToDash);
         if (rightTargetToDash != currentCharacterCell) results.Add(rightTargetToDash);
@@ -36,7 +38,7 @@ public class DashSkillStrategy : SkillStrategy
     {
         List<int> results = new List<int>();
 
-        int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(2);
+        int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
 
         int closestEnemyLeft = -1;
