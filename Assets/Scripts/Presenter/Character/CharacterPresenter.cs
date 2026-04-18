@@ -35,6 +35,7 @@ public class CharacterPresenter : BaseActorPresenter
 
     public override void MoveToCell(int targetCell)
     {
+        _view.UpdateFlipSprite(_model.currentActorCell, targetCell);
         base.MoveToCell(targetCell);
 
         _view.ChangePosition(_model.GetTargetPosition(targetCell));
@@ -44,6 +45,7 @@ public class CharacterPresenter : BaseActorPresenter
     {
         base.Attack(targetCell, damage);
 
+        _view.UpdateFlipSprite(_model.currentActorCell, targetCell);
         _view.AttackAnimation();
     }
 

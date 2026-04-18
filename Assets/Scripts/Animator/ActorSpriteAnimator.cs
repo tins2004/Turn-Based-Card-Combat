@@ -94,6 +94,11 @@ public class ActorSpriteAnimator : MonoBehaviour
         _spriteRenderer.sprite = currentSprites[0];
     }
 
+    public void LookAtCell(int currentCell, int targetCell)
+    {
+        _spriteRenderer.flipX = targetCell < currentCell;
+    }
+
     public void TakeDamageAnim(Action onComplete = null)
     {
         if (takeDamageSequence != null && takeDamageSequence.IsActive())

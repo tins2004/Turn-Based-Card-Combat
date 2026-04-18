@@ -28,8 +28,9 @@ public class EnemyPresenter : BaseActorPresenter
 
     public override void MoveToCell(int targetCell)
     {
+        _view.UpdateFlipSprite(_model.currentActorCell, targetCell);
         base.MoveToCell(targetCell);
-
+        
         _view.ChangePosition(_model.GetTargetPosition(targetCell));
     }
 
@@ -37,6 +38,7 @@ public class EnemyPresenter : BaseActorPresenter
     {
         base.Attack(targetCell, damage);
 
+        _view.UpdateFlipSprite(_model.currentActorCell, targetCell);
         _view.AttackAnimation();
     }
 
@@ -44,8 +46,9 @@ public class EnemyPresenter : BaseActorPresenter
     {
         _model.TakeDamage(damage);
 
-        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
         _view.TakeDamageAnimation();
+        _view.UpdateFlipSprite(_model.currentActorCell, _model._actorOnFloorRepository.GetCellOfActorType(1)[0]);
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
     }
 
     #region(Demo AI)

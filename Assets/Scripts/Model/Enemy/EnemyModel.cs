@@ -6,7 +6,7 @@ public class EnemyModel : BaseActorModel
     {
         get { return actorData as EnemySO; }
     }
-    
+
     public EnemyModel(EnemySO enemyData)
     {
         SetUpActor(100, enemyData);

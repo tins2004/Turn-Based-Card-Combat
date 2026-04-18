@@ -38,6 +38,11 @@ public class CharacterView : MonoBehaviour
     {
         healthText.text = $"{currentHeart}/{maxHeart}";
     }
+
+    public void UpdateFlipSprite(int currentCell, int targetCell)
+    {
+        _animator.LookAtCell(currentCell, targetCell);
+    }
     
     public void IdleAnimation(IHasAnimations actorData)
     {
