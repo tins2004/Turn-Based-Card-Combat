@@ -15,6 +15,36 @@ public class GridFloorRepository : Singleton<GridFloorRepository>, IRepository<i
         return _data.TryGetValue(cell, out var obj) ? obj : null;
     }
 
+    public List<GameObject> GetAllGameObjectCells()
+    {
+        List<GameObject> results = new List<GameObject>();
+        
+        for (int i = 0; i <  _data.Count; i++)
+        {
+            if (_data.TryGetValue(i, out var obj))
+            {
+                if (obj != null) results.Add(obj);
+            }
+        }
+        
+        return results;
+    }
+
+    public List<GameObject> GetGameObjectsByListIndex(List<int> cellsIndex)
+    {
+        List<GameObject> results = new List<GameObject>();
+        
+        foreach (var index in cellsIndex)
+        {
+            if (_data.TryGetValue(index, out var obj))
+            {
+                if (obj != null) results.Add(obj);
+            }
+        }
+        
+        return results;
+    }
+
     public int GetTotalCells()
     {
         return _data.Count;

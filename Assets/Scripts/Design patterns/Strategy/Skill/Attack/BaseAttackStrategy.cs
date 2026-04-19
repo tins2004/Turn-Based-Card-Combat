@@ -6,6 +6,10 @@ using UnityEngine;
 public class BaseAttackStrategy : SkillStrategy
 {
     private int currentCharacterCell;
+    private int leftCellTarget;
+    private int rightCellTarget;
+
+    private int actorType;
 
     public override void Execute(BaseActorPresenter actor, int targetCell, SkillSO skillData)
     {
@@ -17,21 +21,33 @@ public class BaseAttackStrategy : SkillStrategy
         List<int> results = new List<int>();
 
         currentCharacterCell = actorCell;
-        int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
-        int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
+        this.actorType = actorType;
 
-        foreach (int enemyCell in enemiesCell)
-        {
-            if (Math.Abs(enemyCell - currentCharacterCell) <= _model.skillData.RangeSkillImpact && enemyCell >= 0 && enemyCell <= limitFloor)
-            {
-                results.Add(enemyCell);
-            }
-        }
+        leftCellTarget = Math.Max(0, currentCharacterCell - _model.skillData.RangeSkillImpact);
+        rightCellTarget = Math.Min(currentCharacterCell + _model.skillData.RangeSkillImpact, GridFloorRepository.Instance.GetTotalCells() - 1);
+
+        if (leftCellTarget != currentCharacterCell) results.Add(leftCellTarget);
+        if (rightCellTarget != currentCharacterCell) results.Add(rightCellTarget);
 
         return results;
     }
 
-    public override List<int> GetCellsCanImpact(int realCellImpact) => new List<int> { realCellImpact };
+    public override List<int> GetCellsCanImpact(int realCellImpact)
+    {
+        List<int> results = new List<int>();
+        
+        int[] enemieCells = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
+        
+        foreach (int enemyCell in enemieCells)
+        {
+            if ((enemyCell == leftCellTarget || enemyCell == rightCellTarget) && enemyCell != currentCharacterCell)
+            {
+                results.Add(enemyCell);
+            }
+        }
+        
+        return results;
+    }
 
     public override List<int> GetCellsOnLineImpact(int cellTarget) => new List<int> { currentCharacterCell };
 }

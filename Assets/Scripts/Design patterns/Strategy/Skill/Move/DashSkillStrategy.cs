@@ -38,13 +38,13 @@ public class DashSkillStrategy : SkillStrategy
     {
         List<int> results = new List<int>();
 
-        int[] enemiesCell = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
+        int[] enemieCells = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
 
         int closestEnemyLeft = -1;
         int closestEnemyRight = limitFloor + 1;
 
-        foreach (int enemyCell in enemiesCell)
+        foreach (int enemyCell in enemieCells)
         {
             if (enemyCell >= leftTargetToDash && enemyCell < currentCharacterCell)
             {

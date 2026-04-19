@@ -3,7 +3,14 @@ using UnityEngine;
 
 public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
 {
+    [SerializeField] private LayerMask floorLayer;
+
     private string enemyObjectName = "Enemy";
+
+    private CommandEnemyInvoker _commandEnemyInvoker;
+    private Dictionary<EnemyPresenter, EnemyActionController> enemyControllers = new Dictionary<EnemyPresenter, EnemyActionController>();
+    private EnemyPresenter enemyHover;
+
     private ActorOnFloorRepository _actorOnFloorRepository;
 
     private void Start()
@@ -22,9 +29,50 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
         // };
 
         // _model = new DeckModel(startingCards);
+        _commandEnemyInvoker = new CommandEnemyInvoker();
+
         _actorOnFloorRepository = ActorOnFloorRepository.Instance;
 
         SpawnEnemies("WARRIOR_AXE", 5);
+    }
+
+    private void OnEnable()
+    {
+        InputSystem.OnPointerDown += HandlePointerDown;
+        InputSystem.OnPointerUp += HandlePointerUp;
+    }
+
+    private void OnDisable()
+    {
+        InputSystem.OnPointerDown -= HandlePointerDown;
+        InputSystem.OnPointerUp -= HandlePointerUp;
+    }
+
+    private void HandlePointerDown(Vector2 mousePos, Vector2 worldPos)
+    {
+        
+        RaycastHit2D hit = InputSystem.GetHitUnderPosition(worldPos, floorLayer);
+
+        if (hit.collider != null) 
+        {   
+            int cellIndex = GetCellIndexFromCellName(hit.collider.name);
+
+            if (_actorOnFloorRepository.GetActorType(cellIndex) == 2)
+            {
+                enemyHover = _actorOnFloorRepository.GetActorObject(cellIndex) as EnemyPresenter;
+                enemyControllers[enemyHover].UpdateRangeSkillVisuals(enemyHover.GetCurrentCell());
+            }
+
+        }
+    }
+
+    private void HandlePointerUp(Vector2 worldPos)
+    {
+        if (enemyHover != null)
+        {
+            enemyControllers[enemyHover].ResetRangeSkillVisuals();
+            enemyHover = null;
+        }
     }
 
     private void SpawnEnemies(string enemyId, int cellTarget)
@@ -34,6 +82,7 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
                 CreateEnemy(enemyId, cellTarget, transform, $"{enemyObjectName} {0}");
             // EnemyPresenter card = CreateEnemy(enemyId, cellTarget, transform, $"{enemyObjectName} {0}");
         // }
+        EvaluateEnemiesNextAction();
     }
 
     public EnemyPresenter CreateEnemy(string enemyId, int cellTarget, Transform enemyParent, string name)
@@ -45,76 +94,70 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
             enemyPresenter.MoveToCell(cellTarget);
             enemyPresenter.name = name;
 
+            if (!enemyControllers.ContainsKey(enemyPresenter))
+            {
+                enemyControllers.Add(enemyPresenter, new EnemyActionController(enemyPresenter));
+            }
+
             return enemyPresenter;
         }
 
         return null;
     }
 
-    #region(Demo AI)
-    public void ExecuteEnemyTurn()
+    public void RemoveEnemy(EnemyPresenter enemy)
     {
-        int playerCell = _actorOnFloorRepository.GetCellOfActorType(1)[0];
-        int[] enemyCells = _actorOnFloorRepository.GetCellOfActorType(2);
-
-        foreach (int cell in enemyCells)
+        if (enemyControllers.ContainsKey(enemy))
         {
-            BaseActorPresenter actor = _actorOnFloorRepository.GetActorObject(cell);
-            if (actor is EnemyPresenter enemy)
+            enemyControllers.Remove(enemy);
+        }
+    }
+
+    public void EvaluateEnemiesNextAction()
+    {
+        foreach (var pair in enemyControllers)
+        {
+            int currentCell = pair.Key.GetCurrentCell();
+            
+            if (currentCell != -1)
             {
-                DecideEnemyAction(enemy, cell, playerCell);
+                pair.Value.PlanNextAction();
             }
         }
     }
 
-    private void DecideEnemyAction(EnemyPresenter enemy, int currentCell, int playerCell)
+    public void PrepareAndExecuteActions()
     {
-        int distanceToPlayer = Mathf.Abs(currentCell - playerCell);
-        
-        int attackRange = enemy.GetAttackData().RangeSkillImpact; 
-        
-        float randomValue = Random.value; // Trả về 0.0 -> 1.0
+        int playerCell = _actorOnFloorRepository.GetCellOfActorType(1)[0];
 
-        if (distanceToPlayer <= attackRange)
+        foreach (var pair in enemyControllers)
         {
+            int currentCell = pair.Key.GetCurrentCell(); 
+            if (currentCell == -1) return;
 
-            ExecuteSkill(enemy, currentCell, enemy.GetAttackData());
-
-            // TRONG TẦM ĐÁNH: 70% Attack, 30% Buff
-            // if (randomValue < 0.7f) 
-            //     ExecuteSkill(enemy, new BaseAttackStrategy(), playerCell);
-            // else 
-            //     ExecuteSkill(enemy, new BaseBuffStrategy(), currentCell);
+            var validCommand = pair.Value.GetValidCommand(currentCell, playerCell);
+            if (validCommand != null)
+            {
+                _commandEnemyInvoker.Enqueue(validCommand);
+            }
         }
-        else
-        {
-            ExecuteSkill(enemy, currentCell, enemy.GetMoveData());
 
-            // NGOÀI TẦM ĐÁNH: 70% Di chuyển, 30% Buff
-            // if (randomValue < 0.7f)
-                // ExecuteSkill(enemy, new DashSkillStrategy(), playerCell);
-            // else
-            //     ExecuteSkill(enemy, new BaseBuffStrategy(), currentCell);
-        }
+        _commandEnemyInvoker.ProcessAll();
     }
 
-    private void ExecuteSkill(EnemyPresenter enemy, int currentCell, SkillSO skillData)
+    private int GetCellIndexFromCellName(string cellName)
     {
-        SkillStrategy strategy = skillData.SkillAlgorithm;
-        if (strategy == null)
+        if (string.IsNullOrEmpty(cellName)) return 0;
+        
+        string[] partsName = cellName.Split(' ');
+        string lastPart = partsName[partsName.Length - 1];
+
+        if (int.TryParse(lastPart, out int cellIndex)) 
         {
-            Debug.LogError($"No strategy found for skill {skillData.name}");
-            return;
+            return cellIndex;
         }
 
-        strategy.ConfigDataSKill(skillData);
-
-        List<int> realCellsImpact = strategy.GetRealCellsImpact(currentCell,2);
-
-        if (realCellsImpact != null && realCellsImpact.Count > 0)
-        {
-            strategy.Execute(enemy, strategy.GetCellsCanImpact(realCellsImpact[0])[0], skillData);
-        }
+        Debug.LogError("Cell Name is Wrong!");
+        return 0;
     }
-    #endregion
 }

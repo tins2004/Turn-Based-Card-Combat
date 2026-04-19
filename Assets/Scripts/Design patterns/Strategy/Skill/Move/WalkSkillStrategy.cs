@@ -6,7 +6,7 @@ using UnityEngine;
 public class WalkSkillStrategy : SkillStrategy
 {
     private int currentCharacterCell;
-
+    
     public override void Execute(BaseActorPresenter actor, int targetCell, SkillSO skillData)
     {
         actor.MoveToCell(targetCell);

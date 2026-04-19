@@ -87,14 +87,14 @@ public class DeckPresenter : MonoBehaviour
     
     private void SetupObserverListener()
     {
-        Observer.AddListener(ObserverEvents.CHOOSE_CARD, HandleUsedCard);
+        Observer.AddListener(ObserverEvents.CARD_USED, HandleUsedCard);
         // Observer.AddListener(ObserverEvents.PLAYER_END_TURN, HandleEndTurn);
         // Observer.AddListener(ObserverEvents.ENEMY_END_TURN, HandleStartTurn);
     }
 
     private void OnDestroy()
     {
-        Observer.RemoveListener(ObserverEvents.CHOOSE_CARD, HandleUsedCard);
+        Observer.RemoveListener(ObserverEvents.CARD_USED, HandleUsedCard);
         // Observer.RemoveListener(ObserverEvents.PLAYER_END_TURN, HandleEndTurn);
         // Observer.RemoveListener(ObserverEvents.ENEMY_END_TURN, HandleStartTurn);
     }

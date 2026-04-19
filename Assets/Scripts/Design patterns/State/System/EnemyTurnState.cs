@@ -14,12 +14,11 @@ public class EnemyTurnState : IState
 
     public void Execute()
     {
-        _enemySystem.ExecuteEnemyTurn();
-
+        _enemySystem.PrepareAndExecuteActions();
     }
 
     public void Exit()
     {
-        // Cho nó tính toán lại tạng thái cho lược tiếp theo và show ra.
+        _enemySystem.EvaluateEnemiesNextAction();
     }
 }

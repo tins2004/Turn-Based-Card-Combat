@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyView : MonoBehaviour
 {
     [SerializeField] private TMP_Text healthText;
+    [SerializeField] private TMP_Text nextActionText;
 
     private Transform _transform;
     private StateManager _animStateManager;
@@ -36,6 +37,11 @@ public class EnemyView : MonoBehaviour
     public void UpdateHealthUI(int currentHeart, int maxHeart)
     {
         healthText.text = $"{currentHeart}/{maxHeart}";
+    }
+
+    public void UpdateNextActionUI(string nextActionName)
+    {
+        nextActionText.text = nextActionName;
     }
 
     public void UpdateFlipSprite(int currentCell, int targetCell)

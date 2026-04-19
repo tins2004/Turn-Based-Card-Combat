@@ -11,6 +11,7 @@ public abstract class BaseActorPresenter : MonoBehaviour
 
     public virtual void MoveToCell(int targetCell)
     {
+        if (_model._actorOnFloorRepository.Exists(targetCell)) return;
 
         if (_model._actorOnFloorRepository.Exists(_model.currentActorCell))
         {

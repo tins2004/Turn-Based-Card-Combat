@@ -26,6 +26,11 @@ public class EnemyPresenter : BaseActorPresenter
         return _model.actorData as CharacterSO;
     }
 
+    public int GetCurrentCell()
+    {
+        return _model.currentActorCell;
+    }
+
     public override void MoveToCell(int targetCell)
     {
         _view.UpdateFlipSprite(_model.currentActorCell, targetCell);
@@ -49,6 +54,11 @@ public class EnemyPresenter : BaseActorPresenter
         _view.TakeDamageAnimation();
         _view.UpdateFlipSprite(_model.currentActorCell, _model._actorOnFloorRepository.GetCellOfActorType(1)[0]);
         _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+    }
+
+    public void DisplayNextAction(SkillSO skillSO)
+    {
+        _view.UpdateNextActionUI(skillSO.Name);
     }
 
     #region(Demo AI)

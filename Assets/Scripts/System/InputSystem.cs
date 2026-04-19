@@ -6,7 +6,7 @@ public class InputSystem : SingletonMonoBehaviour<InputSystem>
 {
     private Camera _mainCamera;
 
-    public static event Action<Vector2> OnPointerDown;
+    public static event Action<Vector2, Vector2> OnPointerDown;
     public static event Action<Vector2> OnPointerDrag;
     public static event Action<Vector2> OnPointerUp;
 
@@ -27,7 +27,7 @@ public class InputSystem : SingletonMonoBehaviour<InputSystem>
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             _isDragging = true;
-            OnPointerDown?.Invoke(mousePos);
+            OnPointerDown?.Invoke(mousePos, worldPos);
         }
 
         if (_isDragging)

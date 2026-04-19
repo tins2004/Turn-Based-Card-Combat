@@ -63,6 +63,7 @@ public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IReposi
                 results.Add((int)pair.Key);
             }
         }
+        // Debug.Log($"_data cell {string.Join(", ", _data)}");
 
         return results.ToArray();
     }

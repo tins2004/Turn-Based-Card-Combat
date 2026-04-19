@@ -73,13 +73,13 @@ public class CharacterPresenter : BaseActorPresenter
 
     private void SetupObserverListener()
     {
-        Observer.AddListener(ObserverEvents.USED_CARD, HandleUsedCard);
+        Observer.AddListener(ObserverEvents.ACTOR_USED_SKILL, HandleUsedCard);
         // Observer.AddListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
     }
 
     private void OnDestroy()
     {
-        Observer.RemoveListener(ObserverEvents.USED_CARD, HandleUsedCard);
+        Observer.RemoveListener(ObserverEvents.ACTOR_USED_SKILL, HandleUsedCard);
         // Observer.RemoveListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
     }
 }
