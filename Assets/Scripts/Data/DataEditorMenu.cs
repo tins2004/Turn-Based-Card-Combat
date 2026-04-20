@@ -2,7 +2,7 @@ using UnityEditor;
 
 public class DataEditorMenu
 {
-    [MenuItem("Tools/Fetch All Data")]
+    [MenuItem("Tools/Fetch .../All Data")]
     public static void FetchAll()
     {
         FetchSkills();
@@ -11,19 +11,19 @@ public class DataEditorMenu
         FetchEnemies();
     }
 
-    [MenuItem("Tools/Fetch Cards Data")]
+    [MenuItem("Tools/Fetch .../Cards Data")]
     public static void FetchCards()
     {
         GoogleSheetManager.FetchSheet(new CardProcessor());
     }
 
-    [MenuItem("Tools/Fetch Enemies Data")]
+    [MenuItem("Tools/Fetch .../Enemies Data")]
     public static void FetchEnemies()
     {
         GoogleSheetManager.FetchSheet(new EnemyProcessor());
     }
 
-    [MenuItem("Tools/Fetch Skills Data")]
+    [MenuItem("Tools/Fetch .../Skills Data")]
     public static void FetchSkills()
     {
         GoogleSheetManager.FetchSheet(new SkillProcessor());

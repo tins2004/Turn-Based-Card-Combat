@@ -10,7 +10,8 @@ public abstract class BaseActorModel
     public GridFloorRepository _gridFloorRepository { get; private set; }
 
     public int maxHealth { get; private set; }
-    public int currentHealth { get; private set; }
+    public int currentHealth { get; set; }
+    public int currentShield  { get; private set; }
 
     public int currentActorCell { get; set; }
 
@@ -28,14 +29,32 @@ public abstract class BaseActorModel
         currentHealth = maxHealth;
     }
 
-    public virtual void TakeDamage(int amount) {
-        currentHealth -= amount;
-
-        if (currentHealth <= 0)
+    public virtual bool TakeDamage(int amount) 
+    {
+        if (currentShield > 0)
         {
-            currentHealth = 0;
-            // Die();
+            int damageToShield = Mathf.Min(amount, currentShield);
+            currentShield -= damageToShield;
+            amount -= damageToShield;
         }
+
+        if (amount > 0)
+        {
+            currentHealth -= amount;
+
+            if (currentHealth <= 0)
+            {
+                currentHealth = 0;
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    public virtual void AddShield(int amount) 
+    {
+        currentShield += amount;
     }
 
     public Vector2? GetTargetPosition(int targetCellIndex)

@@ -1,9 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(EnemyPresenter))]
 public class EnemyView : MonoBehaviour
 {
+    [SerializeField] private Image healthBox;
     [SerializeField] private TMP_Text healthText;
     [SerializeField] private TMP_Text nextActionText;
 
@@ -14,6 +16,8 @@ public class EnemyView : MonoBehaviour
     private ActorIdleState idleState;
     private ActorAttackState attackState;
     private ActorTakeDamageState takeDamageState;
+    private ActorDeadState deadState;
+    private ActorInitState initState;
 
     private void Awake()
     {
@@ -24,6 +28,8 @@ public class EnemyView : MonoBehaviour
         idleState = new ActorIdleState(_animator);
         attackState = new ActorAttackState(_animator, _animStateManager);
         takeDamageState = new ActorTakeDamageState(_animator, _animStateManager);
+        deadState = new ActorDeadState(_animator, gameObject);
+        initState = new ActorInitState(_animator, _animStateManager);
     }
 
     public void ChangePosition(Vector2? targetPos)
@@ -34,9 +40,11 @@ public class EnemyView : MonoBehaviour
         _transform.localPosition = new Vector2(targetPos.Value.x, targetPos.Value.y);
     }
 
-    public void UpdateHealthUI(int currentHeart, int maxHeart)
+    public void UpdateHealthUI(int currentHeart, int maxHeart, int shield)
     {
-        healthText.text = $"{currentHeart}/{maxHeart}";
+        healthBox.color = shield > 0 ? Color.darkBlue : Color.darkRed;
+        string shieldText = shield > 0 ? $" [{shield}]" : "";
+        healthText.text = $"{currentHeart}/{maxHeart}{shieldText}";
     }
 
     public void UpdateNextActionUI(string nextActionName)
@@ -47,6 +55,13 @@ public class EnemyView : MonoBehaviour
     public void UpdateFlipSprite(int currentCell, int targetCell)
     {
         _animator.LookAtCell(currentCell, targetCell);
+    }
+
+    public void InitAnimation(IHasAnimations actorData)
+    {
+        initState.SetActorData(actorData);
+        _animStateManager.ChangeSate(initState);
+        _animStateManager.ExecuteCurrentState();
     }
 
     public void IdleAnimation(IHasAnimations actorData)
@@ -68,5 +83,9 @@ public class EnemyView : MonoBehaviour
         _animStateManager.ExecuteCurrentState();
     }
 
-    
+    public void DeadAnimation()
+    {
+        _animStateManager.ChangeSate(deadState);
+        _animStateManager.ExecuteCurrentState();
+    }
 }

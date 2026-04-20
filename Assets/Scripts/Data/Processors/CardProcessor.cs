@@ -13,7 +13,7 @@ public class CardProcessor : SheetProcessorBase
         {
             string[] columns = lines[i].Split(',');
 
-            if (columns.Length != 4)
+            if (columns.Length < 5)
             {
                 Debug.LogWarning("Bad value!");
                 continue;
@@ -44,6 +44,8 @@ public class CardProcessor : SheetProcessorBase
             card.Name = columns[2].Trim('\"');
             card.Detail = ScriptableObjectPaths.FindAssetById<SkillSO>(columns[3].Trim('\"').Trim(), $"{ScriptableObjectPaths.SKILL_SAVE_PATH}");
             
+            int.TryParse(columns[4].Trim('\"'), out card.EnergyRequired);
+
             if (isNew)
             {
                 AssetDatabase.CreateAsset(card, assetPath);

@@ -36,7 +36,7 @@ public class BaseAttackStrategy : SkillStrategy
     {
         List<int> results = new List<int>();
         
-        int[] enemieCells = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
+        int[] enemieCells = _model._actorOnFloorRepository.GetCellsByActorType(actorType == 1 ? 2 : 1);
         
         foreach (int enemyCell in enemieCells)
         {

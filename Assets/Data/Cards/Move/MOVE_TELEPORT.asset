@@ -15,4 +15,5 @@ MonoBehaviour:
   CardId: MOVE_TELEPORT
   Name: "D\u1ECBch chuy\u1EC3n"
   Type: Move
+  EnergyRequired: 2
   Detail: {fileID: 11400000, guid: b91be8c5985a41e49b7ea8b4a1bb792f, type: 2}

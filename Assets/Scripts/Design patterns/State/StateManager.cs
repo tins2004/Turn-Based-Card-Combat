@@ -3,6 +3,9 @@ using UnityEngine;
 public class StateManager : MonoBehaviour
 {
     [SerializeField] IState _currentState;
+
+    public IState GetCurrentState() => _currentState;
+    
     public void ChangeSate(IState state)
     {
         if (state == null) return;

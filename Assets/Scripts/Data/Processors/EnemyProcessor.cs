@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -14,7 +13,7 @@ public class EnemyProcessor : SheetProcessorBase
         {
             string[] columns = lines[i].Split(',');
 
-            if (columns.Length < 4)
+            if (columns.Length < 5)
             {
                 Debug.LogWarning("Bad value!");
                 continue;
@@ -43,8 +42,9 @@ public class EnemyProcessor : SheetProcessorBase
             enemy.Type = enemyType;
 
             enemy.Name = columns[2].Trim('\"');
+            int.TryParse(columns[3].Trim('\"'), out enemy.Health);
             
-            enemy.EnemySkill = columns.Skip(3)
+            enemy.EnemySkill = columns.Skip(4)
                                 .Select(s => s.Trim('\"').Trim())
                                 .Where(id => !string.IsNullOrWhiteSpace(id))
                                 .Select(id => {
@@ -52,6 +52,7 @@ public class EnemyProcessor : SheetProcessorBase
                                 })
                                 .Where(skill => skill != null)
                                 .ToList();
+            
 
             if (isNew)
             {

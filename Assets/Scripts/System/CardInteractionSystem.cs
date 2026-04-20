@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,8 +14,8 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     private readonly List<RaycastResult> _raycastResults = new List<RaycastResult>();
 
     private GameObject lastHoveredCell;
-    private int cellIndexCanImpact;
 
+    private DeckPresenter _deckPresenter;
     private CardPresenter activeCard;
     private CellSelectionLogic _selectionLogic;
     private GridFloorRepository _gridFloorRepository;
@@ -25,7 +27,8 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
     {
         activeCard = null;
         _selectionLogic = new CellSelectionLogic();
-
+        
+        _deckPresenter = FindAnyObjectByType<DeckPresenter>();
         _gridFloorRepository = GridFloorRepository.Instance;
         _actorOnFloorRepository = ActorOnFloorRepository.Instance;
     }
@@ -70,7 +73,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
 
     private void HandlePointerDown(Vector2 mousePos, Vector2 worldPos)
     {
-        UpdateEnemyRange(_actorOnFloorRepository.GetCellOfActorType(2));
+        UpdateEnemyRange(_actorOnFloorRepository.GetCellsByActorType(2));
 
         if (!UpdateRaycastResults(mousePos)) return;
 
@@ -85,7 +88,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
 
             activeCard.SelectedCard(true);
 
-            _selectionLogic.UpdateRealImpact(activeCard.GetRealCellsImpact(_actorOnFloorRepository.GetCellOfActorType(1)[0], 1));
+            _selectionLogic.UpdateRealImpact(activeCard.GetRealCellsImpact(_actorOnFloorRepository.GetCellsByActorType(1)[0], 1));
             CellVisualHighlighter.HighlightCells(_selectionLogic.realImpactObjects, Color.blue);
             
             break;
@@ -124,14 +127,24 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         {            
             RaycastHit2D hit = InputSystem.GetHitUnderPosition(worldPos, floorLayer);
 
-            if (hit.collider != null) 
+            if (hit.collider != null && _selectionLogic.canImpactIndices.Count > 0) 
             {
                 int cellIndex = GetCellIndexFromCellName(hit.collider.name);
+                bool canSelect = true;
 
                 if (_selectionLogic.realImpactIndices.Contains(cellIndex))
                 {
-                    Observer.Notify(ObserverEvents.ACTOR_USED_SKILL, new CardActionORD(activeCard._skillStrategy, cellIndexCanImpact));   
-                    Observer.Notify(ObserverEvents.CARD_USED, activeCard.gameObject.name); 
+                    if (activeCard.GetCardData().Detail.RangeSkillImpact < 2)
+                    {
+                        if (!_selectionLogic.canImpactIndices.Contains(cellIndex))
+                            canSelect = false;
+                    }
+
+                    if (canSelect && _deckPresenter.HaveEnergyToUseCard(activeCard.GetCardData().EnergyRequired))
+                    {
+                        Observer.Notify(ObserverEvents.ACTOR_USED_SKILL, new CardActionORD(activeCard._skillStrategy, _selectionLogic.CellCanImpactNearTargetCell(cellIndex)));   
+                        Observer.Notify(ObserverEvents.CARD_USED, activeCard.gameObject.name);     
+                    }
                 }
             }
         }
@@ -140,6 +153,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         ResetAllCellsVisuals();
 
         _selectionLogic.ClearRealImpact();
+        _selectionLogic.ClearCanImpact();
 
         activeCard = null;
     }
@@ -152,11 +166,11 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
         {
             CellVisualHighlighter.HighlightCells(_selectionLogic.realImpactObjects, Color.white);
 
-            var impactIndices = activeCard.GetCellsCanImpact(cellIndex);
-            foreach (var idx in impactIndices)
+            _selectionLogic.UpdateCanImpact(activeCard.GetCellsCanImpact(cellIndex));
+            
+            foreach (var idx in _selectionLogic.canImpactIndices)
             {
                 var obj = _gridFloorRepository.Get(idx);
-                cellIndexCanImpact = idx;
 
                 CellVisualHighlighter.HighlightSingle(obj, Color.green);
                 _selectionLogic.currentActionAreaObjects.Add(obj);
@@ -165,6 +179,7 @@ public class CardInteractionSystem : SingletonMonoBehaviour<CardInteractionSyste
             if (activeCard.GetCardData().Detail.RangeSkillImpact > 0)
             {
                 var lineIndices = activeCard.GetCellsOnLineImpact(cellIndex);
+                
                 foreach (var idx in lineIndices)
                 {
                     var obj = _gridFloorRepository.Get(idx);

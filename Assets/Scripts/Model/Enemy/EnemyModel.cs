@@ -9,6 +9,6 @@ public class EnemyModel : BaseActorModel
 
     public EnemyModel(EnemySO enemyData)
     {
-        SetUpActor(100, enemyData);
+        SetUpActor(enemyData.Health, enemyData);
     }
 }

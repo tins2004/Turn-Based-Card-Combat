@@ -1,9 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(CharacterPresenter))]
 public class CharacterView : MonoBehaviour
 {
+    [SerializeField] private Image healthBox;
     [SerializeField] private TMP_Text healthText;
 
     private Transform _transform;
@@ -34,9 +36,11 @@ public class CharacterView : MonoBehaviour
         _transform.localPosition = new Vector2(targetPos.Value.x, targetPos.Value.y);
     }
 
-    public void UpdateHealthUI(int currentHeart, int maxHeart)
+    public void UpdateHealthUI(int currentHeart, int maxHeart, int shield)
     {
-        healthText.text = $"{currentHeart}/{maxHeart}";
+        healthBox.color = shield > 0 ? Color.darkBlue : Color.darkRed;
+        string shieldText = shield > 0 ? $" [{shield}]" : "";
+        healthText.text = $"{currentHeart}/{maxHeart}{shieldText}";
     }
 
     public void UpdateFlipSprite(int currentCell, int targetCell)

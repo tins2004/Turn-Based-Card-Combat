@@ -5,5 +5,6 @@ public class CardSO : ScriptableObject {
     [ReadOnly] public string CardId;
     [ReadOnly] public string Name;
     [ReadOnly] public string Type;
+    [ReadOnly] public int EnergyRequired;
     [ReadOnly] public SkillSO Detail;
 }

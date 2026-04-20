@@ -49,10 +49,15 @@ public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IReposi
         return _actorObjects.TryGetValue(cell, out var actorObject) ? actorObject : null;
     }
 
+    public Dictionary<int, int> GetAllDataCellActor()
+    {
+        return _data;
+    }
+
     /// <summary>
     /// Actor Type: 0 is Space, 1 is Character, 2 is Enemy
     /// </summary>
-    public int[] GetCellOfActorType(int actorType)
+    public int[] GetCellsByActorType(int actorType)
     {
         List<int> results = new List<int>();
 
@@ -63,7 +68,7 @@ public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IReposi
                 results.Add((int)pair.Key);
             }
         }
-        // Debug.Log($"_data cell {string.Join(", ", _data)}");
+        // Debug.Log($"_data cell {string.Join(", ", results)}");
 
         return results.ToArray();
     }
@@ -73,11 +78,6 @@ public class ActorOnFloorRepository : Singleton<ActorOnFloorRepository>, IReposi
     /// </summary>
     public bool Exists(int cell)
     {
-        // foreach (var (i, val) in _data)
-        // {
-        //     Debug.Log($"Vị trí Cell: {i} có: {val}");
-        // }
-
         if (_data.ContainsKey(cell))
         {   
             return _data[cell] != 0;

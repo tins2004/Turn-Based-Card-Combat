@@ -30,7 +30,7 @@ public class CardView : MonoBehaviour
 
             if (text.gameObject.name == "Type")
             {
-                text.text = cardData.Type;
+                text.text = $"{cardData.Type} [{cardData.EnergyRequired}e]";
             }
 
             if (text.gameObject.name == "Description")

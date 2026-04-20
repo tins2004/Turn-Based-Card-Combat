@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyPresenter : BaseActorPresenter
@@ -17,8 +16,8 @@ public class EnemyPresenter : BaseActorPresenter
     {
         _model = new EnemyModel(enemyData);
 
-        _view.IdleAnimation(enemyData);
-        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+        _view.InitAnimation(enemyData);
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
     }
 
     public override ScriptableObject GetActorData()
@@ -49,11 +48,23 @@ public class EnemyPresenter : BaseActorPresenter
 
     public override void TakeDamage(int damage)
     {
-        _model.TakeDamage(damage);
+        bool haveHealth = _model.TakeDamage(damage);
+        if (!haveHealth)
+        {
+            _view.DeadAnimation();
+            return;
+        }
 
         _view.TakeDamageAnimation();
-        _view.UpdateFlipSprite(_model.currentActorCell, _model._actorOnFloorRepository.GetCellOfActorType(1)[0]);
-        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+        _view.UpdateFlipSprite(_model.currentActorCell, _model._actorOnFloorRepository.GetCellsByActorType(1)[0]);
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
+    }
+
+    public override void AddShield(int shield)
+    {
+        _model.AddShield(shield);
+
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
     }
 
     public void DisplayNextAction(SkillSO skillSO)

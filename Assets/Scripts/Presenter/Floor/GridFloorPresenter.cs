@@ -34,6 +34,7 @@ public class GridFloorPresenter : MonoBehaviour
             GameObject cell = _view.SpawnCell(_model.GetCellPosition(x), new Vector3(_model.cellWidth, _model.cellHeight, 1f), $"{_model.cellName} {x}");
             _view.UpdateCellVisual(cell, Color.white);  
             GridFloorRepository.Instance.Add(x, cell);
+            ActorOnFloorRepository.Instance.Add(x, new ActorOnFloorData { actorType = 0, actorObject = null });
         }
     }
 

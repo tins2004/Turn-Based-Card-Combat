@@ -10,9 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6df50fa4142b22d49abc644b21ce36ef, type: 3}
-  m_Name: SKILL_DEFEND
+  m_Name: ABILITY_DEFEND
   m_EditorClassIdentifier: Assembly-CSharp::CardSO
-  CardId: SKILL_DEFEND
+  CardId: ABILITY_DEFEND
   Name: "Ph\xF2ng th\u1EE7"
-  Type: Skill
-  Detail: {fileID: 11400000, guid: b433f9f6ce681f948b136a11f62bbbf5, type: 2}
+  Type: Ability
+  EnergyRequired: 1
+  Detail: {fileID: 11400000, guid: f75aa0659b3097f4ab16eb8b9c9c7cc9, type: 2}

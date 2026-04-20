@@ -15,4 +15,5 @@ MonoBehaviour:
   CardId: ATTACK_BASE_ATTACK
   Name: "T\u1EA5n c\xF4ng"
   Type: Attack
+  EnergyRequired: 1
   Detail: {fileID: 11400000, guid: 2fc44bf190476894a8b9d23310153b7e, type: 2}

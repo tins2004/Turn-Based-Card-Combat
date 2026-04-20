@@ -9,6 +9,6 @@ public class CharacterModel : BaseActorModel
 
     public CharacterModel(CharacterSO characterData)
     {
-        SetUpActor(100, characterData);
+        SetUpActor(30, characterData);
     }
 }

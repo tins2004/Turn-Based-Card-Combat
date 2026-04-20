@@ -11,11 +11,14 @@ public static class ObserverEvents
     // public const string ENEMY_END_TURN = "ENEMY_END_TURN";
     // #endregion
 
-    // #region(Character)
+    #region(Character)
     // public const string CHARACTER_TAKE_DAMAGE = "CHARACTER_TAKE_DAMAGE";
-    // #endregion
+    public const string PLAYER_DEAD = "PLAYER_DEAD";
+    public const string PLAYER_REVIVED = "PLAYER_REVIVED";
+    #endregion
 
-    // #region(Enemy)
+    #region(Enemy)
     // public const string ENEMY_TAKE_DAMAGE = "ENEMY_TAKE_DAMAGE";
-    // #endregion
+    public const string ENEMY_DEAD = "ENEMY_DEAD";
+    #endregion
 }

@@ -25,11 +25,16 @@ public class DeckModel
     private const float ANGLE_STEP = 2f;
     private const float CARD_SPACING = 230f;
     public string handCardName { get; private set; }
+    public int startingEnergy { get; private set; }
+    public int currentEnergy { get; set; }
 
-    public DeckModel(List<string> startingCards)
+    public DeckModel(List<string> startingCards, int startingEnergy)
     {
         handCardName = "Card";
         _handCardsRepository = HandCardsRepository.Instance;
+
+        this.startingEnergy = startingEnergy;
+        currentEnergy = startingEnergy;
 
         drawPile = new List<string>(startingCards);
         Shuffle(drawPile);
@@ -81,6 +86,11 @@ public class DeckModel
             Debug.LogError($"Card {cardName} not found in HandCardsRepository!");
             return null;
         }
+
+        currentEnergy -= cardPresenter.GetCardData().EnergyRequired;
+
+        if (currentEnergy < 0)
+            currentEnergy = 0;
 
         for (int i = 0; i < hand.Count; i++)
         {

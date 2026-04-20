@@ -4,6 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(DeckPresenter))]
 public class DeckView : MonoBehaviour
 {
+    [SerializeField] private TMP_Text energyText;
     [SerializeField] private TMP_Text drawPileText;
     [SerializeField] private TMP_Text discardPileText;
 
@@ -61,8 +62,9 @@ public class DeckView : MonoBehaviour
         rect.localRotation = transformData.Rotation;
     }
 
-    public void DisplayDeckDemo(int drawPileCount, string drawPileList, int discardPileCount)
+    public void DisplayDeckDemo(int energy, int drawPileCount, string drawPileList, int discardPileCount)
     {
+        energyText.text = $"Energy: {energy}";
         drawPileText.text = $"Draw Pile [{drawPileCount}]\n{drawPileList}";
         discardPileText.text = $"Discard Pile [{discardPileCount}]";
     }

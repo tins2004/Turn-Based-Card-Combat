@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CharacterPresenter : BaseActorPresenter
@@ -5,7 +6,7 @@ public class CharacterPresenter : BaseActorPresenter
     [SerializeField] private CharacterSO characterData;
     
     [Header("Grid Settings")]
-    [SerializeField] private int spawnPos = 0;
+    [SerializeField] private int spawnPos = 3;
 
     private CharacterView _view;
 
@@ -22,7 +23,7 @@ public class CharacterPresenter : BaseActorPresenter
         _model = new CharacterModel(characterData);
 
         _view.IdleAnimation(characterData);
-        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
         MoveToCell(spawnPos);
 
         SetupObserverListener();
@@ -35,6 +36,8 @@ public class CharacterPresenter : BaseActorPresenter
 
     public override void MoveToCell(int targetCell)
     {
+        if (targetCell < 0) return;
+
         _view.UpdateFlipSprite(_model.currentActorCell, targetCell);
         base.MoveToCell(targetCell);
 
@@ -51,10 +54,22 @@ public class CharacterPresenter : BaseActorPresenter
 
     public override void TakeDamage(int damage)
     {
-        _model.TakeDamage(damage);
+        bool haveHealth = _model.TakeDamage(damage);
 
         _view.TakeDamageAnimation();
-        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
+
+        if (!haveHealth)
+        {
+            Observer.Notify(ObserverEvents.PLAYER_DEAD, true);
+        }
+    }
+
+    public override void AddShield(int shield)
+    {
+        _model.AddShield(shield);
+
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
     }
 
     private void HandleUsedCard(object data)
@@ -71,15 +86,23 @@ public class CharacterPresenter : BaseActorPresenter
     //     _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth);
     // }
 
+    private void HandlePlayerRevived(object obj)
+    {
+        if (!(bool)obj) return;
+
+        _model.currentHealth = _model.maxHealth;
+        _view.UpdateHealthUI(_model.currentHealth, _model.maxHealth, _model.currentShield);
+    }
+
     private void SetupObserverListener()
     {
         Observer.AddListener(ObserverEvents.ACTOR_USED_SKILL, HandleUsedCard);
-        // Observer.AddListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
+        Observer.AddListener(ObserverEvents.PLAYER_REVIVED, HandlePlayerRevived);
     }
 
     private void OnDestroy()
     {
         Observer.RemoveListener(ObserverEvents.ACTOR_USED_SKILL, HandleUsedCard);
-        // Observer.RemoveListener(ObserverEvents.CHARACTER_TAKE_DAMAGE, HandleTakeDamage);
+        Observer.RemoveListener(ObserverEvents.PLAYER_REVIVED, HandlePlayerRevived);
     }
 }

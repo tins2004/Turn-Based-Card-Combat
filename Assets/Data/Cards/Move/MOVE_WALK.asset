@@ -15,4 +15,5 @@ MonoBehaviour:
   CardId: MOVE_WALK
   Name: "Di chuy\u1EC3n"
   Type: Move
+  EnergyRequired: 1
   Detail: {fileID: 11400000, guid: d90d414fc183f7944a61664d7a66be58, type: 2}

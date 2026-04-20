@@ -38,7 +38,7 @@ public class DashSkillStrategy : SkillStrategy
     {
         List<int> results = new List<int>();
 
-        int[] enemieCells = _model._actorOnFloorRepository.GetCellOfActorType(actorType == 1 ? 2 : 1);
+        int[] enemieCells = _model._actorOnFloorRepository.GetCellsByActorType(actorType == 1 ? 2 : 1);
         int limitFloor = GridFloorRepository.Instance.GetTotalCells() - 1;
 
         int closestEnemyLeft = -1;

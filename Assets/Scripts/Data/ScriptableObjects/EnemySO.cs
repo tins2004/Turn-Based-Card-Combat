@@ -7,6 +7,7 @@ public class EnemySO : ScriptableObject, IHasAnimations
     [ReadOnly] public string EnemyId;
     [ReadOnly] public string Name;
     [ReadOnly] public string Type;
+    [ReadOnly] public int Health;
     [ReadOnly] public List<SkillSO> EnemySkill;
     public List<AnimationData> Animations = new List<AnimationData>();
 

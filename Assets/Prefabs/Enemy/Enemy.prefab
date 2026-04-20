@@ -164,6 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbdf6854a1a56934fb1c72535c7cc50e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyView
+  healthBox: {fileID: 7984915798791091476}
   healthText: {fileID: 5338414863860783835}
   nextActionText: {fileID: 6974351618066769903}
 --- !u!114 &3951352779322333423
@@ -578,7 +579,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 22}
-  m_SizeDelta: {x: 110, y: 40}
+  m_SizeDelta: {x: 150, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3039360157640500413
 CanvasRenderer:

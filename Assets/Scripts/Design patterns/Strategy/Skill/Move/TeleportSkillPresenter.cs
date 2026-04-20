@@ -27,5 +27,5 @@ public class TeleportSkillStrategy : SkillStrategy
 
     public override List<int> GetCellsCanImpact(int realCellImpact) => new List<int> { realCellImpact };
 
-    public override List<int> GetCellsOnLineImpact(int cellTarget) => new List<int> { _model._actorOnFloorRepository.GetCellOfActorType(1)[0] };
+    public override List<int> GetCellsOnLineImpact(int cellTarget) => new List<int> { _model._actorOnFloorRepository.GetCellsByActorType(1)[0] };
 }

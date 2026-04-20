@@ -15,9 +15,11 @@ MonoBehaviour:
   EnemyId: WARRIOR_AXE
   Name: "R\xECu"
   Type: Warrior
+  Health: 20
   EnemySkill:
   - {fileID: 11400000, guid: d90d414fc183f7944a61664d7a66be58, type: 2}
   - {fileID: 11400000, guid: 2fc44bf190476894a8b9d23310153b7e, type: 2}
+  - {fileID: 11400000, guid: f75aa0659b3097f4ab16eb8b9c9c7cc9, type: 2}
   Animations:
   - animationType: 2
     sprites:
@@ -37,3 +39,27 @@ MonoBehaviour:
     - {fileID: 5281750946635039065, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
     - {fileID: 6324080537177615244, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
     - {fileID: 3960961710712497688, guid: 79955584e519e9049adb7407cf4a3cec, type: 3}
+  - animationType: 1
+    sprites:
+    - {fileID: -3498650767529558072, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 3072025510827308600, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -4308433970026275988, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 8941552742621140824, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -1469380343425163923, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 1512438488333511780, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -4608449595533301862, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -8025262048130335697, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 5530535631180947205, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -1381228762728128686, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -4101449028447946092, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 8650096735785189287, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+  - animationType: 3
+    sprites:
+    - {fileID: -1636112882996861530, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: -7625881852923091777, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: 5397500908387719711, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: -437083963760578091, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: 5573429324852406649, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: 511644010118226858, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: -2814413885907626888, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}
+    - {fileID: -3938067102993155475, guid: 5bd7a8500807bae4e9346a1ce4c50925, type: 3}

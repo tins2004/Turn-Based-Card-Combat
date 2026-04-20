@@ -25,12 +25,12 @@ public class EnemyActionController
         expectedImpactCells.Clear();
         _queuedCommand = null;
 
-        // float randomValue = Random.value;
+        float randomValue = Random.value;
 
-        // if (randomValue < 0.7f) 
+        if (randomValue < 0.7f) 
             plannedSkill = _owner.GetAttackData();
-        // else 
-        //     ExecuteSkill(enemy, new BaseBuffStrategy(), currentCell);
+        else 
+            plannedSkill = _owner.GetThirdSkillData();
         
         skillStrategy = plannedSkill.SkillAlgorithm;
         skillStrategy.ConfigDataSKill(plannedSkill);

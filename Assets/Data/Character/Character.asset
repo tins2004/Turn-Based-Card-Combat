@@ -32,3 +32,17 @@ MonoBehaviour:
     - {fileID: 8738852634765236386, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}
     - {fileID: 1435813858662126931, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}
     - {fileID: 2647078634671427691, guid: a846f1a2c73faed4fb3cedb502dd66ab, type: 3}
+  - animationType: 1
+    sprites:
+    - {fileID: -3498650767529558072, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 3072025510827308600, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -4308433970026275988, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 8941552742621140824, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -1469380343425163923, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 1512438488333511780, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -4608449595533301862, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -8025262048130335697, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 5530535631180947205, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -1381228762728128686, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: -4101449028447946092, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}
+    - {fileID: 8650096735785189287, guid: 970d5a2995cb9514499a5a0c26a2b2ea, type: 3}

@@ -41,11 +41,11 @@ public class InputSystem : SingletonMonoBehaviour<InputSystem>
             OnPointerUp?.Invoke(worldPos);
         }
 
-        // if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        // {
-        //     // Observer.Notify(ObserverEvents.CHARACTER_TAKE_DAMAGE, 10);
-        //     Observer.Notify(ObserverEvents.ENEMY_TAKE_DAMAGE, 10);
-        // }
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Debug.Log($"GetAllDataCellActor {string.Join(", ", ActorOnFloorRepository.Instance.GetAllDataCellActor())}");
+            Debug.Log($"allEnemiesCells cell {string.Join(", ", EnemiesRepository.Instance.GetAllDataEnemies())}");
+        }
     }
 
     public static RaycastHit2D GetHitUnderPosition(Vector2 worldPos, LayerMask mask)

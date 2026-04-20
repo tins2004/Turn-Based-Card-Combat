@@ -15,4 +15,5 @@ MonoBehaviour:
   CardId: MOVE_DASH
   Name: "L\u01B0\u1EDBt"
   Type: Move
+  EnergyRequired: 1
   Detail: {fileID: 11400000, guid: 42b35dc41b2b86048aa2726ea108785b, type: 2}

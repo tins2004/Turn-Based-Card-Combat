@@ -5,6 +5,7 @@ public class DeckPresenter : MonoBehaviour
 {
     [Header("Hand Card")]
     [SerializeField] private int cardsPerTurn = 5;
+    [SerializeField] private int startingEnergy = 3;
     [SerializeField] private Transform handParent;
 
     private DeckView _view;
@@ -24,19 +25,18 @@ public class DeckPresenter : MonoBehaviour
 
         List<string> startingCards = new List<string> { 
             "MOVE_WALK",
-            "ATTACK_BASE_ATTACK",
-            "MOVE_TELEPORT",
-            "MOVE_TELEPORT",
             "MOVE_WALK",
             "MOVE_WALK",
-            "ATTACK_BASE_ATTACK",
-            "ATTACK_BASE_ATTACK",
-            "ATTACK_BASE_ATTACK",
             "MOVE_DASH",
-            "MOVE_DASH"
+            "MOVE_TELEPORT",
+            "ATTACK_BASE_ATTACK",
+            "ATTACK_BASE_ATTACK",
+            "ATTACK_BASE_ATTACK",
+            "ABILITY_DEFEND",
+            "ABILITY_DEFEND"
         };
 
-        _model = new DeckModel(startingCards);
+        _model = new DeckModel(startingCards, startingEnergy);
         StartTurn();
 
     }
@@ -44,6 +44,7 @@ public class DeckPresenter : MonoBehaviour
     public void StartTurn()
     {
         _model.DrawCards(cardsPerTurn);
+        _model.currentEnergy = _model.startingEnergy;
         DrawVisualCards();
     }
 
@@ -65,7 +66,17 @@ public class DeckPresenter : MonoBehaviour
         }
 
         
-        _view.DisplayDeckDemo(_model.drawPile.Count, string.Join("\n", _model.drawPile), _model.discardPile.Count);
+        _view.DisplayDeckDemo(_model.currentEnergy, _model.drawPile.Count, string.Join("\n", _model.drawPile), _model.discardPile.Count);
+    }
+
+    public bool HaveEnergyToUseCard(int cardEnergyRequired)
+    {
+        if (_model.currentEnergy < cardEnergyRequired)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public void HandleUsedCard(object data)
@@ -83,19 +94,19 @@ public class DeckPresenter : MonoBehaviour
                 childCount++;
             }
         }
+
+        _view.DisplayDeckDemo(_model.currentEnergy, _model.drawPile.Count, string.Join("\n", _model.drawPile), _model.discardPile.Count);
     }
     
     private void SetupObserverListener()
     {
         Observer.AddListener(ObserverEvents.CARD_USED, HandleUsedCard);
-        // Observer.AddListener(ObserverEvents.PLAYER_END_TURN, HandleEndTurn);
         // Observer.AddListener(ObserverEvents.ENEMY_END_TURN, HandleStartTurn);
     }
 
     private void OnDestroy()
     {
         Observer.RemoveListener(ObserverEvents.CARD_USED, HandleUsedCard);
-        // Observer.RemoveListener(ObserverEvents.PLAYER_END_TURN, HandleEndTurn);
         // Observer.RemoveListener(ObserverEvents.ENEMY_END_TURN, HandleStartTurn);
     }
 }

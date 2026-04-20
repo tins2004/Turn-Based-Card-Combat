@@ -21,6 +21,12 @@ public abstract class BaseActorPresenter : MonoBehaviour
             }
         }
 
+        if (_model is EnemyModel)
+        {
+            EnemiesRepository.Instance.Add(targetCell, this as EnemyPresenter);
+            EnemiesRepository.Instance.Remove(_model.currentActorCell);
+        }
+
         _model.currentActorCell = targetCell;
         _model._actorOnFloorRepository.Add(targetCell, new ActorOnFloorData { actorType = _model is CharacterModel ? 1 : 2, actorObject = this });
     }
@@ -48,4 +54,5 @@ public abstract class BaseActorPresenter : MonoBehaviour
     }
 
     public abstract void TakeDamage(int damage);
+    public abstract void AddShield(int shield);
 }

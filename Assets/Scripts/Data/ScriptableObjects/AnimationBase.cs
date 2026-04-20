@@ -4,7 +4,8 @@ public enum AnimationType
 {
   Attack,
   Dead,
-  Idle
+  Idle,
+  Init
 }
 
 [System.Serializable]
