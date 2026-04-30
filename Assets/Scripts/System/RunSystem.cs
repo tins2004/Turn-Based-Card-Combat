@@ -14,6 +14,8 @@ public class RunSystem : SingletonMonoBehaviour<RunSystem>
     [SerializeField] private Button endButton;
     private TMP_Text endButtonText;
 
+    private EnemySystem _enemySystem;
+
     private StateManager _runStateManager;
     private EnemyTurnState enemyTurnState;
     private PlayerTurnState playerTurnState;
@@ -24,8 +26,9 @@ public class RunSystem : SingletonMonoBehaviour<RunSystem>
     {
         SetupObserverListener();
         
-        _runStateManager = GetComponent<StateManager>();
+        _enemySystem = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemySystem>();
 
+        _runStateManager = GetComponent<StateManager>();
         _runStateManager.ChangeSate(new PlayerTurnState());
 
         endTurnButton.onClick.AddListener(OnClickEndTurnButton);
@@ -69,14 +72,31 @@ public class RunSystem : SingletonMonoBehaviour<RunSystem>
         _runStateManager.ExecuteCurrentState();
     }
 
+    public void HandleEnemyDead(object data)
+    {
+        if (data is GameObject enemy)
+        {
+            if (_enemySystem == null)
+            {
+                _enemySystem = GameObject.FindGameObjectWithTag("EnemyController").GetComponent<EnemySystem>();
+            }
+
+            _enemySystem.RemoveEnemy(enemy);
+
+            _enemySystem.CheckEnemiesCountAndRespawn();
+        }
+    }
+
     private void SetupObserverListener()
     {
         Observer.AddListener(ObserverEvents.PLAYER_DEAD, HandlePlayerDead);
+        Observer.AddListener(ObserverEvents.ENEMY_DEAD, HandleEnemyDead);
     }
 
     private void OnDestroy()
     {
-        Observer.RemoveListener(ObserverEvents.ACTOR_USED_SKILL, HandlePlayerDead);
+        Observer.RemoveListener(ObserverEvents.PLAYER_DEAD, HandlePlayerDead);
+        Observer.RemoveListener(ObserverEvents.ENEMY_DEAD, HandleEnemyDead);
     }
 
     public void ShowEndPanel(string title, string buttonText)

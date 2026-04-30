@@ -18,8 +18,6 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
 
     private void Start()
     {
-        SetupObserverListener();
-
         List<string> startingEnemy = new List<string> { 
             "WARRIOR_AXE",
             "WARRIOR_AXE",
@@ -162,8 +160,9 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
         _commandEnemyInvoker.ProcessAll();
     }
 
-    public void RemoveEnemyData(EnemyPresenter enemy)
+    public void RemoveEnemy(GameObject enemyObj)
     {
+        EnemyPresenter enemy = enemyObj.GetComponent<EnemyPresenter>();
         if (enemyControllers.ContainsKey(enemy))
         {
             enemyControllers.Remove(enemy);
@@ -181,12 +180,17 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
             if (cell == enemyCell)
             {
                 _actorOnFloorRepository.Add(cell, new ActorOnFloorData { actorType = 0, actorObject = null });
-            }
-                
+            }       
         }
+
+        if (_enemyPool == null)
+        {
+            _enemyPool = GetComponent<ObjectPool>();
+        }
+        _enemyPool.ReturnObject(enemyObj);
     }
 
-    private void CheckEnemiesCountAndRespawn()
+    public void CheckEnemiesCountAndRespawn()
     {
         int[] enemiesCells = _actorOnFloorRepository.GetCellsByActorType(2);
         if (enemiesCells == null || enemiesCells.Length > 0) return;
@@ -200,32 +204,6 @@ public class EnemySystem : SingletonMonoBehaviour<EnemySystem>
         }
 
         SpawnEnemies(enemiesSpawn);
-    }
-
-    public void HandleEnemyDead(object data)
-    {
-        if (data is GameObject enemy)
-        {
-            if (_enemyPool == null)
-            {
-                _enemyPool = GetComponent<ObjectPool>();
-            }
-
-            RemoveEnemyData(enemy.GetComponent<EnemyPresenter>());
-            _enemyPool.ReturnObject(enemy);
-
-            CheckEnemiesCountAndRespawn();
-        }
-    }
-
-    private void SetupObserverListener()
-    {
-        Observer.AddListener(ObserverEvents.ENEMY_DEAD, HandleEnemyDead);
-    }
-
-    private void OnDestroy()
-    {
-        Observer.RemoveListener(ObserverEvents.ENEMY_DEAD, HandleEnemyDead);
     }
 
     private int GetCellIndexFromCellName(string cellName)
